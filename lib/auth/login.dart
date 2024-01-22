@@ -18,7 +18,7 @@ class _LoginState extends State<Login> {
   String lang = 'Français';
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  final _formKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   late bool displayPassword = false;
   late bool spinner = false;
 

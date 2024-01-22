@@ -1,13 +1,17 @@
 // ignore_for_file: prefer_const_constructors, sort_child_properties_last, prefer_const_literals_to_create_immutables, unnecessary_new
 import 'dart:io';
+import 'dart:js_interop';
 import 'package:app_medcine/exam/pay-exam.dart';
 import 'package:app_medcine/fuction/function.dart';
 import 'package:app_medcine/fuction/translate.dart';
+import 'package:document_scanner_flutter/configs/configs.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:path/path.dart';
+import 'package:document_scanner_flutter/document_scanner_flutter.dart';
 
 class DocExam extends StatefulWidget {
   const DocExam({super.key});
@@ -121,6 +125,22 @@ class _DocExamState extends State<DocExam> {
     }
   }
 
+  Future<void> getAdditionalDataFromDocScanner() async {
+    try {
+      // `scannedDoc` will be the PDF file generated from scanner
+      // We can use launch instead of launchForPdf to generate an image file from scanner
+      // ScannerFileSource.GALLERY instead of ScanFileSource.CAMERA intuitively
+      File? scannedDoc = await DocumentScannerFlutter.launchForPdf(context as BuildContext, source: ScannerFileSource.CAMERA, labelsConfig: const {});
+      setState(() {
+        (scannedDoc != null) ? additionalImages.add(scannedDoc) : 
+        debugPrint("Aucun document n'a été scanné") ;
+      });
+    } on PlatformException {
+      // 'Failed to get document path or operation cancelled!';
+      debugPrint("Echec ou annulation de l'opération de scan de document");
+    }
+  }
+
   void removeAdditionalData(int index) {
     setState(() {
       additionalImages.removeAt(index);
@@ -190,6 +210,36 @@ class _DocExamState extends State<DocExam> {
                         GestureDetector(
                           onTap: getAdditionalData,
                           child: translate('upload',lang)
+                        ),
+                        // Document Scanner from CAMERA TO PDF
+                        paddingTop(10),
+                        GestureDetector(
+                          onTap: getAdditionalDataFromDocScanner,
+                          child: Container(
+                              decoration: BoxDecoration(
+                                color: Colors.grey,
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(20)
+                                ),
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: <Widget> [
+                                  Icon(
+                                    Icons.document_scanner_rounded,
+                                    size: 36,
+                                    color: Color(0xff00a6ff),
+                                  ),
+                                  Text(
+                                    translate("scanPDF", lang),
+                                    style: TextStyle(
+                                      color: Color(0xff00a6ff),
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
                         ),
                         paddingTop(15),
                         GridView.count(

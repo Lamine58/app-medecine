@@ -23,17 +23,17 @@ class _SignInState extends State<SignIn> {
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
-  final _formKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   late bool displayPassword = false;
   late bool spinner = false;
 
-  var _character = 'M';
-  var phoneFormatter = new MaskTextInputFormatter(
+  String _character = 'M';
+  MaskTextInputFormatter phoneFormatter = new MaskTextInputFormatter(
     mask: '+225##########', 
     filter: { "#": RegExp(r'[0-9]') },
     type: MaskAutoCompletionType.lazy
   );
-  var dateFormatter = new MaskTextInputFormatter(
+  MaskTextInputFormatter dateFormatter = new MaskTextInputFormatter(
     mask: '##/##/####', 
     filter: { "#": RegExp(r'[0-9]') },
     type: MaskAutoCompletionType.lazy

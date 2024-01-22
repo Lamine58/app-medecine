@@ -22,7 +22,7 @@ class _ExamsState extends State<Exams> {
 
   var load = false;
   int selectedOption = 0;
-  List filteredList = [
+  List<Map<String,String>> filteredList = [
     {
       "name":"Examen 1",
       "amount":"2000 XOF - WAVE CI",
@@ -49,7 +49,7 @@ class _ExamsState extends State<Exams> {
       "date":"03 janvier 2024",
     }
   ];
-  List itemList = [
+  List<Map<String,String>> itemList = [
     {
       "name":"Examen 1",
       "amount":"2000 XOF - WAVE CI",

@@ -35,6 +35,9 @@ translate(name,lang){
       "share": "Share",
       "empty_exam":"No exam found",
       "or":"Or",
+      "inquiry":"Medical inquiries",
+      "scanPDF": "Scan document to PDF",
+      "send_doc":"Download Document(s)",
       "login_text":"Hi! Log in for a personalized experience or sign up now",
       "info":"""The diagnosis, management, and estimated mortality risk in patients with hypertension have been historically based on clinic or office blood pressure readings. Current evidence indicates that 24-hour ambulatory blood pressure monitoring should be an integral part of hypertension care.
         
@@ -137,6 +140,9 @@ In cas of none return in the exact time a penalty of XXX USD will be apply. Unti
       "empty_exam_center":"Aucun centre d'examen trouvée",
       "login_text":"Salut ! Connectez-vous pour une expérience personnalisée ou inscrivez-vous dès maintenant",
       "or":"Ou",
+      "inquiry":"Compléments de dossier médical",
+      "scanPDF": "Scanner un document en PDF",
+      "send_doc":"Transmettre le(les) document(s)",
       "info":"""Le diagnostic, la prise en charge et le risque de mortalité estimé chez les patients souffrant d'hypertension ont toujours été basés sur les lectures de tension artérielle en clinique ou en cabinet. Les preuves actuelles indiquent que la surveillance ambulatoire de la pression artérielle 24 heures sur 24 devrait faire partie intégrante des soins de l'hypertension.
         
 Après 24 heures, le patient revient et les données sont téléchargées, y compris toute information demandée par le médecin dans un journal.
@@ -177,9 +183,9 @@ Les informations les plus utiles comprennent la tension artérielle moyenne sur 
       "activities":['Activité','Étudiant','Travailleur','Manager','Chômeur','Retraite'],
       "situations":['Situation','Célibataire','Divorcé','Veuf'],
       "origins" : ['Origine', 'Asiatique','Européenne','Africaine','Nord-Américaine','Sud-Américaine'],
-      "confirm_data":"Confirmer vos infornmations",
-      "center_exam_data":"Informatiuon du centre",
-      "data_center": "Nom du Doctot / Hôpital",
+      "confirm_data":"Confirmer vos informations",
+      "center_exam_data":"Information du centre",
+      "data_center": "Nom du Docteur / Hôpital",
       "error_data": "Veuillez entrer le nom du médecin/hôpital",
       "address": "Adresse",
       "error_address": "Veuillez saisir votre adresse",

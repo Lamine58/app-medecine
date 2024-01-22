@@ -36,7 +36,7 @@ class _LandingState extends State<Landing> {
       return SingleChildScrollView(
         child: Container(
           height: MediaQuery.sizeOf(context).height*0.9,
-          padding: EdgeInsets.only(bottom:20,right: 20,left: 20,top: 10),
+          padding: EdgeInsets.only(bottom: 20,right: 20,left: 20,top: 10),
           child: Column(
             children: [
               paddingTop(5),

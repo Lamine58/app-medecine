@@ -49,6 +49,7 @@ dependencies:
   flutter_launcher_icons: ^0.13.1
   pdf: ^3.10.7
   path: ^1.8.3
+  document_scanner_flutter: ^0.2.7
 
 dev_dependencies:
   flutter_test:
