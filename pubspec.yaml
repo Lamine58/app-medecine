@@ -50,6 +50,7 @@ dependencies:
   pdf: ^3.10.7
   path: ^1.8.3
   document_scanner_flutter: ^0.2.7
+  pdfx: ^2.5.0
 
 dev_dependencies:
   flutter_test:

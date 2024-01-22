@@ -1,6 +1,6 @@
 // ignore_for_file: prefer_const_constructors, sort_child_properties_last, prefer_const_literals_to_create_immutables, unnecessary_new
 import 'dart:io';
-import 'dart:js_interop';
+// import 'dart:js_interop';
 import 'package:app_medcine/exam/pay-exam.dart';
 import 'package:app_medcine/fuction/function.dart';
 import 'package:app_medcine/fuction/translate.dart';
@@ -12,6 +12,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:path/path.dart';
 import 'package:document_scanner_flutter/document_scanner_flutter.dart';
+// import 'package:pdfx/pdfx.dart';
 
 class DocExam extends StatefulWidget {
   const DocExam({super.key});

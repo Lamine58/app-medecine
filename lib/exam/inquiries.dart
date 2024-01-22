@@ -1,7 +1,7 @@
 import 'package:app_medcine/fuction/function.dart';
 import 'package:app_medcine/fuction/translate.dart';
 import 'package:flutter/material.dart';
-import 'package:document_scanner_flutter/document_scanner_flutter.dart';
+// import 'package:document_scanner_flutter/document_scanner_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Inquiries extends StatefulWidget {
