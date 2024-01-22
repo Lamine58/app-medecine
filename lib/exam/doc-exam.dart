@@ -117,7 +117,7 @@ class _DocExamState extends State<DocExam> {
       } else {
       }
     } catch (e) {
-      print('Erreur lors de la sélection des fichiers: $e');
+      debugPrint('Erreur lors de la sélection des fichiers: $e');
     }
   }
 

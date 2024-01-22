@@ -21,6 +21,7 @@ class _DashboardState extends State<Dashboard> {
   String lang = 'Français';
   var app_name = 'ANEPAM';
 
+  @override
   void initState() {
     super.initState();
     init();

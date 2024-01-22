@@ -23,7 +23,9 @@ class _AppState extends State<App> with TickerProviderStateMixin{
   late Animation<double> _animation;
 
 
+  // ignore: non_constant_identifier_names
   late AnimationController _controller_logo;
+  // ignore: non_constant_identifier_names
   late Animation<double> _animation_logo;
 
   _start() async {

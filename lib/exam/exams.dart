@@ -11,8 +11,8 @@ import 'package:pdf/widgets.dart' as pw;
 
 
 class Exams extends StatefulWidget {
-  final item;
-  Exams(this.item,{Key? key}) : super(key: key);
+  final dynamic item;
+  const Exams(this.item,{Key? key}) : super(key: key);
 
   @override
   State<Exams> createState() => _ExamsState();
@@ -76,10 +76,11 @@ class _ExamsState extends State<Exams> {
       "date":"03 janvier 2024",
     }
   ];
-  var next_page_url;
+  // ignore: non_constant_identifier_names
+  dynamic next_page_url;
   TextEditingController searchController = TextEditingController();
   List options = [];
-  ScrollController _scrollController = ScrollController();
+  final ScrollController _scrollController = ScrollController();
 
   String lang = 'Français';
 
@@ -89,6 +90,7 @@ class _ExamsState extends State<Exams> {
     }
   }
 
+  @override
   void initState() {
     super.initState();
     init();
@@ -290,7 +292,7 @@ class _ExamsState extends State<Exams> {
             ),
           ),
           paddingTop(20),
-          load==false && filteredList.length==0
+          load==false && filteredList.isEmpty
           ? Expanded(
             child: Container(
               decoration: BoxDecoration(

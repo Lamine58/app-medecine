@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 translate(name,lang){
 
-  var data;
+  Map<String, Object>? data;
 
   if(lang=='English'){
 
@@ -148,7 +148,7 @@ Les informations les plus utiles comprennent la tension artérielle moyenne sur 
       "text_dash":"Espace utilisateur",
       "my_exam":"Mes examens",
       "my_exam_text":"Liste de tous vos examens",
-      "calendar_exam":"Planifier l\'examen ABPM",
+      "calendar_exam":"Planifier l'examen ABPM",
       "calendar_exam_text":"Faite de tous les examens",
       "edit_exam":"Modifier un examen",
       "edit_exam_text":"Liste de tous vos examens",
@@ -206,6 +206,6 @@ En cas de non-retour dans les délais, une pénalité de XXX USD sera appliquée
 
   }
 
-  return data[name];
+  return data![name];
 
 }

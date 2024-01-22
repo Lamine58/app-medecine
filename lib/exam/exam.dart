@@ -19,6 +19,7 @@ class _ExamState extends State<Exam> {
   String lang = 'Français';
   var app_name = 'ANEPAM';
 
+  @override
   void initState() {
     super.initState();
     init();
