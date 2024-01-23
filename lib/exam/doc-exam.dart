@@ -12,7 +12,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:path/path.dart';
 import 'package:document_scanner_flutter/document_scanner_flutter.dart';
-// import 'package:pdfx/pdfx.dart';
 
 class DocExam extends StatefulWidget {
   const DocExam({super.key});
@@ -25,11 +24,11 @@ class _DocExamState extends State<DocExam> {
 
   String lang = 'Français';
   final TextEditingController requestController = TextEditingController();
-  final _formKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   late bool displayPassword = false;
   late bool spinner = false;
   List<File> additionalImages = [];
-  final picker = ImagePicker();
+  final ImagePicker picker = ImagePicker();
 
   @override
   void initState() {
@@ -47,7 +46,7 @@ class _DocExamState extends State<DocExam> {
   }
 
 
-  _info(context){
+  _info(BuildContext context){
       return SingleChildScrollView(
         child: Container(
           height: MediaQuery.sizeOf(context).height*0.9,
@@ -126,12 +125,16 @@ class _DocExamState extends State<DocExam> {
     }
   }
 
-  Future<void> getAdditionalDataFromDocScanner() async {
+  Future<void> getAdditionalDataFromDocScanner(int index) async {
     try {
       // `scannedDoc` will be the PDF file generated from scanner
       // We can use launch instead of launchForPdf to generate an image file from scanner
       // ScannerFileSource.GALLERY instead of ScanFileSource.CAMERA intuitively
-      File? scannedDoc = await DocumentScannerFlutter.launchForPdf(context as BuildContext, source: ScannerFileSource.CAMERA, labelsConfig: const {});
+      File? scannedDoc = (index == 0) ? 
+      await DocumentScannerFlutter.launch(context as BuildContext, source: ScannerFileSource.CAMERA, labelsConfig: const {})
+      :
+      await DocumentScannerFlutter.launchForPdf(context as BuildContext, source: ScannerFileSource.CAMERA, labelsConfig: const {})
+      ;
       setState(() {
         (scannedDoc != null) ? additionalImages.add(scannedDoc) : 
         debugPrint("Aucun document n'a été scanné") ;
@@ -212,35 +215,38 @@ class _DocExamState extends State<DocExam> {
                           onTap: getAdditionalData,
                           child: translate('upload',lang)
                         ),
-                        // Document Scanner from CAMERA TO PDF
                         paddingTop(10),
-                        GestureDetector(
-                          onTap: getAdditionalDataFromDocScanner,
-                          child: Container(
-                              decoration: BoxDecoration(
-                                color: Colors.grey,
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(20)
+                        Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(5)
+                            ),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: <Widget> [
+                              IconButton(
+                                onPressed: () {
+                                  getAdditionalDataFromDocScanner(0);
+                                },
+                                icon: Icon(
+                                  Icons.add_a_photo_sharp,
+                                  size: 36,
+                                  color: Color(0xff00a6ff),
                                 ),
                               ),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: <Widget> [
-                                  Icon(
-                                    Icons.document_scanner_rounded,
-                                    size: 36,
-                                    color: Color(0xff00a6ff),
-                                  ),
-                                  Text(
-                                    translate("scanPDF", lang),
-                                    style: TextStyle(
-                                      color: Color(0xff00a6ff),
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ],
+                              IconButton(
+                                onPressed: () {
+                                  getAdditionalDataFromDocScanner(1);
+                                },
+                                icon: Icon(
+                                  Icons.document_scanner_rounded,
+                                  size: 36,
+                                  color: Color(0xff00a6ff),
+                                ),
                               ),
-                            ),
+                            ],
+                          ),
                         ),
                         paddingTop(15),
                         GridView.count(
