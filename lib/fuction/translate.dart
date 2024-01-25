@@ -106,16 +106,28 @@ In cas of none return in the exact time a penalty of XXX USD will be apply. Unti
 
 
 """,
-    'labels_config': {
-      'scanHint': 'Align the document within the frame to start scanning',
-      'cancel': 'Cancel',
-      'retry': 'Retry',
-      'error': 'Error',
-      'ok': 'OK',
-      'processing': 'Processing...',
-      'imageProcessingError': 'Error processing the scanned image',
-      'permissionDenied': 'Permission denied. Please grant camera access',
-    },
+  "labels_config": {
+        ScannerLabelsConfig.PDF_GALLERY_EMPTY_TITLE: 'Documents',
+        ScannerLabelsConfig.PDF_GALLERY_EMPTY_MESSAGE: 'PDF gallery is empty',
+        ScannerLabelsConfig.PDF_GALLERY_FILLED_TITLE_SINGLE: 'PDF Document',
+        ScannerLabelsConfig.PDF_GALLERY_FILLED_TITLE_MULTIPLE: 'PDF Documents',
+        ScannerLabelsConfig.PDF_GALLERY_DONE_LABEL: 'Done',
+        ScannerLabelsConfig.PDF_GALLERY_ADD_IMAGE_LABEL: 'Scan',
+        ScannerLabelsConfig.PICKER_CAMERA_LABEL: 'Devices Photo',
+        ScannerLabelsConfig.PICKER_GALLERY_LABEL: 'Gallery',
+        ScannerLabelsConfig.ANDROID_NEXT_BUTTON_LABEL: 'Next',
+        ScannerLabelsConfig.ANDROID_SAVE_BUTTON_LABEL: 'Save',
+        ScannerLabelsConfig.ANDROID_ROTATE_LEFT_LABEL: 'Rotate left',
+        ScannerLabelsConfig.ANDROID_ROTATE_RIGHT_LABEL: 'Rotate right',
+        ScannerLabelsConfig.ANDROID_ORIGINAL_LABEL: 'Original',
+        ScannerLabelsConfig.ANDROID_BMW_LABEL: 'BMW',
+        ScannerLabelsConfig.ANDROID_SCANNING_MESSAGE: 'Scanning...',
+        ScannerLabelsConfig.ANDROID_LOADING_MESSAGE: 'Loading...',
+        ScannerLabelsConfig.ANDROID_APPLYING_FILTER_MESSAGE: 'Applying filter...',
+        ScannerLabelsConfig.ANDROID_CANT_CROP_ERROR_TITLE: 'Unable to crop',
+        ScannerLabelsConfig.ANDROID_CANT_CROP_ERROR_MESSAGE: 'Unable to crop image. Try Again.',
+        ScannerLabelsConfig.ANDROID_OK_LABEL: 'OK',
+      }
     };
 
   }else if(lang=='Français'){
@@ -225,7 +237,7 @@ En cas de non-retour dans les délais, une pénalité de XXX USD sera appliquée
       ScannerLabelsConfig.PDF_GALLERY_FILLED_TITLE_SINGLE: 'Document PDF',
       ScannerLabelsConfig.PDF_GALLERY_FILLED_TITLE_MULTIPLE: 'Documents PDF',
       ScannerLabelsConfig.PDF_GALLERY_DONE_LABEL: 'Terminé',
-      ScannerLabelsConfig.PDF_GALLERY_ADD_IMAGE_LABEL: 'Scanner une image',
+      ScannerLabelsConfig.PDF_GALLERY_ADD_IMAGE_LABEL: 'Scanner',
       ScannerLabelsConfig.PICKER_CAMERA_LABEL: 'Appareil photo',
       ScannerLabelsConfig.PICKER_GALLERY_LABEL: 'Galerie',
       ScannerLabelsConfig.ANDROID_NEXT_BUTTON_LABEL: 'Suivant',

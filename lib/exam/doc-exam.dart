@@ -125,15 +125,15 @@ class _DocExamState extends State<DocExam> {
     }
   }
 
-  Future<void> getAdditionalDataFromDocScanner(int index) async {
+  Future<void> getAdditionalDataFromDocScanner(int index,context) async {
     try {
       // `scannedDoc` will be the PDF file generated from scanner
       // We can use launch instead of launchForPdf to generate an image file from scanner
       // ScannerFileSource.GALLERY instead of ScanFileSource.CAMERA intuitively
       File? scannedDoc = (index == 0) ? 
-      await DocumentScannerFlutter.launch(context as BuildContext, source: ScannerFileSource.CAMERA, labelsConfig: const {})
+      await DocumentScannerFlutter.launch(context, source: ScannerFileSource.CAMERA, labelsConfig: translate('labels_config', lang))
       :
-      await DocumentScannerFlutter.launchForPdf(context as BuildContext, source: ScannerFileSource.CAMERA, labelsConfig: const {})
+      await DocumentScannerFlutter.launchForPdf(context, source: ScannerFileSource.CAMERA, labelsConfig: translate('labels_config', lang))
       ;
       setState(() {
         (scannedDoc != null) ? additionalImages.add(scannedDoc) : 
@@ -226,7 +226,7 @@ class _DocExamState extends State<DocExam> {
                             children: <Widget> [
                               IconButton(
                                 onPressed: () {
-                                  getAdditionalDataFromDocScanner(0);
+                                  getAdditionalDataFromDocScanner(0,context);
                                 },
                                 icon: Icon(
                                   Icons.add_a_photo_sharp,
@@ -236,7 +236,7 @@ class _DocExamState extends State<DocExam> {
                               ),
                               IconButton(
                                 onPressed: () {
-                                  getAdditionalDataFromDocScanner(1);
+                                  getAdditionalDataFromDocScanner(1,context);
                                 },
                                 icon: Icon(
                                   Icons.document_scanner_rounded,
