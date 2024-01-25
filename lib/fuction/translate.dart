@@ -1,3 +1,4 @@
+import 'package:document_scanner_flutter/configs/configs.dart';
 import 'package:flutter/material.dart';
 
 translate(name,lang){
@@ -104,7 +105,17 @@ At the end of the Lease term, the Lessee shall be obligated to return the Equipm
 In cas of none return in the exact time a penalty of XXX USD will be apply. Until payment any result will be returned.
 
 
-"""
+""",
+    'labels_config': {
+      'scanHint': 'Align the document within the frame to start scanning',
+      'cancel': 'Cancel',
+      'retry': 'Retry',
+      'error': 'Error',
+      'ok': 'OK',
+      'processing': 'Processing...',
+      'imageProcessingError': 'Error processing the scanned image',
+      'permissionDenied': 'Permission denied. Please grant camera access',
+    },
     };
 
   }else if(lang=='Français'){
@@ -207,7 +218,29 @@ L’Appareil devra maintenir, aux frais du Locataire, l’Équipement en bon ét
 En cas de non-retour dans les délais, une pénalité de XXX USD sera appliquée. Jusqu'au paiement, tout résultat sera restitué.
 
 
-"""
+""",
+  "labels_config": {
+      ScannerLabelsConfig.PDF_GALLERY_EMPTY_TITLE: 'Documents',
+      ScannerLabelsConfig.PDF_GALLERY_EMPTY_MESSAGE: 'La galerie de PDF est vide',
+      ScannerLabelsConfig.PDF_GALLERY_FILLED_TITLE_SINGLE: 'Document PDF',
+      ScannerLabelsConfig.PDF_GALLERY_FILLED_TITLE_MULTIPLE: 'Documents PDF',
+      ScannerLabelsConfig.PDF_GALLERY_DONE_LABEL: 'Terminé',
+      ScannerLabelsConfig.PDF_GALLERY_ADD_IMAGE_LABEL: 'Scanner une image',
+      ScannerLabelsConfig.PICKER_CAMERA_LABEL: 'Appareil photo',
+      ScannerLabelsConfig.PICKER_GALLERY_LABEL: 'Galerie',
+      ScannerLabelsConfig.ANDROID_NEXT_BUTTON_LABEL: 'Suivant',
+      ScannerLabelsConfig.ANDROID_SAVE_BUTTON_LABEL: 'Enregistrer',
+      ScannerLabelsConfig.ANDROID_ROTATE_LEFT_LABEL: 'Rotation gauche',
+      ScannerLabelsConfig.ANDROID_ROTATE_RIGHT_LABEL: 'Rotation droite',
+      ScannerLabelsConfig.ANDROID_ORIGINAL_LABEL: 'Original',
+      ScannerLabelsConfig.ANDROID_BMW_LABEL: 'BMW',
+      ScannerLabelsConfig.ANDROID_SCANNING_MESSAGE: 'Numérisation en cours...',
+      ScannerLabelsConfig.ANDROID_LOADING_MESSAGE: 'Chargement...',
+      ScannerLabelsConfig.ANDROID_APPLYING_FILTER_MESSAGE: 'Application du filtre en cours...',
+      ScannerLabelsConfig.ANDROID_CANT_CROP_ERROR_TITLE: 'Impossible de rogner',
+      ScannerLabelsConfig.ANDROID_CANT_CROP_ERROR_MESSAGE: 'Impossible de rogner l\'image. Veuillez réessayer.',
+      ScannerLabelsConfig.ANDROID_OK_LABEL: 'OK',
+      }
     };
 
   }

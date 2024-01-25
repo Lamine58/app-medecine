@@ -140,7 +140,6 @@ class _DocExamState extends State<DocExam> {
         debugPrint("Aucun document n'a été scanné") ;
       });
     } on PlatformException {
-      // 'Failed to get document path or operation cancelled!';
       debugPrint("Echec ou annulation de l'opération de scan de document");
     }
   }
