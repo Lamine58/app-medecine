@@ -20,12 +20,22 @@ class _ExamDateState extends State<ExamDate> {
   final TextEditingController _timePickerController = TextEditingController();
   final GlobalKey<FormState> _formRdvPickerKey = GlobalKey<FormState>();
 
+  late String _dateLabel;
+
+  late DateTime date, time;
+
   @override
   void initState() {
     super.initState();
     init();
     _datePicker = true;
     _timePicker = false;
+    _dateLabel = (lang == 'Français') ?
+    DateTime.now().day.toString() + DateTime.now().month.toString() +
+    DateTime.now().year.toString()
+    :
+    DateTime.now().year.toString() + DateTime.now().month.toString() +
+    DateTime.now().day.toString();
   }
 
   init() async {
@@ -35,6 +45,20 @@ class _ExamDateState extends State<ExamDate> {
         lang = prefs.getString('lang')!;
       });
     }
+  }
+
+  void _showDateTimePicker(BuildContext context) {
+    (_datePicker) ? showDatePicker(
+      context: context, 
+      fieldLabelText: _dateLabel,
+      firstDate: DateTime.now(),
+      lastDate: DateTime((DateTime.now().year)+5),
+    ) : (_timePicker) ? showTimePicker(
+      context: context,
+      hourLabelText: "08",
+      minuteLabelText: "30",
+      initialTime: const TimeOfDay(hour: 08, minute: 30),
+    ) : null;
   }
 
   @override
@@ -92,6 +116,20 @@ class _ExamDateState extends State<ExamDate> {
                       children: [
                         TextFormField(
                           controller: _datePickerController,
+                          onTap: () {
+                            setState(() {  
+                              _datePicker = true;
+                              _timePicker = false;
+                              _showDateTimePicker(context);
+                            });
+                          },
+                          onChanged: (value) {
+                            setState(() {  
+                              _datePicker = false;
+                              _timePicker = true;
+                              _showDateTimePicker(context);
+                            });
+                          },
                           textInputAction: TextInputAction.next,
                           style: const TextStyle(color: Colors.black,fontWeight: FontWeight.w300),
                           decoration: InputDecoration(
@@ -133,11 +171,28 @@ class _ExamDateState extends State<ExamDate> {
                         paddingTop(15),
                         TextFormField(
                           controller: _timePickerController,
+                          onTap: () {
+                            _datePicker = false;
+                            _timePicker = true;
+                            _showDateTimePicker(context);
+                          },
+                          onChanged: (value) {
+                            _datePicker = false;
+                            _timePicker = false; 
+                            _showDateTimePicker(context);
+                            /* Automatisation d'envoie via une methode asynchrone 
+                            qui verifie la disponibilité de la date et de l'heure et affiche le resultat
+                            via un modal et reaffiche automatiquement le selectionneur de date ou d'heure 
+                            selon les contraintes.
+                            Si plus d'heure pour ce jour alors showDatePicker sinon showTimePicker
+                            ou laisser la possibilité de valider via le 
+                            material button en dessous */
+                          },
                           textInputAction: TextInputAction.next,
                           style: const TextStyle(color: Colors.black,fontWeight: FontWeight.w300),
                           decoration: InputDecoration(
                             prefix: Icon(
-                              Icons.today,
+                              Icons.av_timer_outlined,
                               size: 25,
                               color: primaryColor(),
                             ),
