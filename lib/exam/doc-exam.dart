@@ -1,13 +1,17 @@
 // ignore_for_file: prefer_const_constructors, sort_child_properties_last, prefer_const_literals_to_create_immutables, unnecessary_new
 import 'dart:io';
+// import 'dart:js_interop';
 import 'package:app_medcine/exam/pay-exam.dart';
 import 'package:app_medcine/fuction/function.dart';
 import 'package:app_medcine/fuction/translate.dart';
+import 'package:document_scanner_flutter/configs/configs.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:path/path.dart';
+import 'package:document_scanner_flutter/document_scanner_flutter.dart';
 
 class DocExam extends StatefulWidget {
   const DocExam({super.key});
@@ -20,11 +24,11 @@ class _DocExamState extends State<DocExam> {
 
   String lang = 'Français';
   final TextEditingController requestController = TextEditingController();
-  final _formKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   late bool displayPassword = false;
   late bool spinner = false;
   List<File> additionalImages = [];
-  final picker = ImagePicker();
+  final ImagePicker picker = ImagePicker();
 
   @override
   void initState() {
@@ -42,7 +46,7 @@ class _DocExamState extends State<DocExam> {
   }
 
 
-  _info(context){
+  _info(BuildContext context){
       return SingleChildScrollView(
         child: Container(
           height: MediaQuery.sizeOf(context).height*0.9,
@@ -117,7 +121,26 @@ class _DocExamState extends State<DocExam> {
       } else {
       }
     } catch (e) {
-      print('Erreur lors de la sélection des fichiers: $e');
+      debugPrint('Erreur lors de la sélection des fichiers: $e');
+    }
+  }
+
+  Future<void> getAdditionalDataFromDocScanner(int index,context) async {
+    try {
+      // `scannedDoc` will be the PDF file generated from scanner
+      // We can use launch instead of launchForPdf to generate an image file from scanner
+      // ScannerFileSource.GALLERY instead of ScanFileSource.CAMERA intuitively
+      File? scannedDoc = (index == 0) ? 
+      await DocumentScannerFlutter.launch(context, source: ScannerFileSource.CAMERA, labelsConfig: translate('labels_config', lang))
+      :
+      await DocumentScannerFlutter.launchForPdf(context, source: ScannerFileSource.CAMERA, labelsConfig: translate('labels_config', lang))
+      ;
+      setState(() {
+        (scannedDoc != null) ? additionalImages.add(scannedDoc) : 
+        debugPrint("Aucun document n'a été scanné") ;
+      });
+    } on PlatformException {
+      debugPrint("Echec ou annulation de l'opération de scan de document");
     }
   }
 
@@ -190,6 +213,39 @@ class _DocExamState extends State<DocExam> {
                         GestureDetector(
                           onTap: getAdditionalData,
                           child: translate('upload',lang)
+                        ),
+                        paddingTop(10),
+                        Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(5)
+                            ),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: <Widget> [
+                              IconButton(
+                                onPressed: () {
+                                  getAdditionalDataFromDocScanner(0,context);
+                                },
+                                icon: Icon(
+                                  Icons.add_a_photo_sharp,
+                                  size: 36,
+                                  color: Color(0xff00a6ff),
+                                ),
+                              ),
+                              IconButton(
+                                onPressed: () {
+                                  getAdditionalDataFromDocScanner(1,context);
+                                },
+                                icon: Icon(
+                                  Icons.document_scanner_rounded,
+                                  size: 36,
+                                  color: Color(0xff00a6ff),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                         paddingTop(15),
                         GridView.count(

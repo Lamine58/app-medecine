@@ -1,8 +1,9 @@
+import 'package:document_scanner_flutter/configs/configs.dart';
 import 'package:flutter/material.dart';
 
 translate(name,lang){
 
-  var data;
+  Map<String, Object>? data;
 
   if(lang=='English'){
 
@@ -35,6 +36,16 @@ translate(name,lang){
       "share": "Share",
       "empty_exam":"No exam found",
       "or":"Or",
+      "inquiry":"Medical inquiries",
+      "date_title" : "All exams start at 8:30am and must be take before the wish day and hour.",
+      "date_picker" : "Choose a consultation date",
+      "date_day" : "Choose the meeting day",
+      "date_time" : "Choose the meeting time",
+      "date_day_error" : "Please choose a valid date",
+      "date_time_error" : "Please choose a valid time",
+      "date_confirm" : "Confirm date",
+      "scanPDF": "Scan document to PDF",
+      "send_doc":"Download Document(s)",
       "login_text":"Hi! Log in for a personalized experience or sign up now",
       "info":"""The diagnosis, management, and estimated mortality risk in patients with hypertension have been historically based on clinic or office blood pressure readings. Current evidence indicates that 24-hour ambulatory blood pressure monitoring should be an integral part of hypertension care.
         
@@ -101,7 +112,29 @@ At the end of the Lease term, the Lessee shall be obligated to return the Equipm
 In cas of none return in the exact time a penalty of XXX USD will be apply. Until payment any result will be returned.
 
 
-"""
+""",
+  "labels_config": {
+        ScannerLabelsConfig.PDF_GALLERY_EMPTY_TITLE: 'Documents',
+        ScannerLabelsConfig.PDF_GALLERY_EMPTY_MESSAGE: 'PDF gallery is empty',
+        ScannerLabelsConfig.PDF_GALLERY_FILLED_TITLE_SINGLE: 'PDF Document',
+        ScannerLabelsConfig.PDF_GALLERY_FILLED_TITLE_MULTIPLE: 'PDF Documents',
+        ScannerLabelsConfig.PDF_GALLERY_DONE_LABEL: 'Done',
+        ScannerLabelsConfig.PDF_GALLERY_ADD_IMAGE_LABEL: 'Scan',
+        ScannerLabelsConfig.PICKER_CAMERA_LABEL: 'Devices Photo',
+        ScannerLabelsConfig.PICKER_GALLERY_LABEL: 'Gallery',
+        ScannerLabelsConfig.ANDROID_NEXT_BUTTON_LABEL: 'Next',
+        ScannerLabelsConfig.ANDROID_SAVE_BUTTON_LABEL: 'Save',
+        ScannerLabelsConfig.ANDROID_ROTATE_LEFT_LABEL: 'Rotate left',
+        ScannerLabelsConfig.ANDROID_ROTATE_RIGHT_LABEL: 'Rotate right',
+        ScannerLabelsConfig.ANDROID_ORIGINAL_LABEL: 'Original',
+        ScannerLabelsConfig.ANDROID_BMW_LABEL: 'BMW',
+        ScannerLabelsConfig.ANDROID_SCANNING_MESSAGE: 'Scanning...',
+        ScannerLabelsConfig.ANDROID_LOADING_MESSAGE: 'Loading...',
+        ScannerLabelsConfig.ANDROID_APPLYING_FILTER_MESSAGE: 'Applying filter...',
+        ScannerLabelsConfig.ANDROID_CANT_CROP_ERROR_TITLE: 'Unable to crop',
+        ScannerLabelsConfig.ANDROID_CANT_CROP_ERROR_MESSAGE: 'Unable to crop image. Try Again.',
+        ScannerLabelsConfig.ANDROID_OK_LABEL: 'OK',
+      }
     };
 
   }else if(lang=='Français'){
@@ -137,6 +170,16 @@ In cas of none return in the exact time a penalty of XXX USD will be apply. Unti
       "empty_exam_center":"Aucun centre d'examen trouvée",
       "login_text":"Salut ! Connectez-vous pour une expérience personnalisée ou inscrivez-vous dès maintenant",
       "or":"Ou",
+      "inquiry":"Compléments de dossier médical",
+      "date_title" : "Les examens commencent à 8:30 et doivent etre prise avant la date et l'heure désirées.",
+      "date_picker" : "Choisir une date de consultation",
+      "date_day" : "Choisir le jour de consultation",
+      "date_time" : "Choisir l'heure de consultation",
+      "date_day_error" : "Veuillez choisir un jour valide",
+      "date_time_error" : "Veuillez choisir une heure valide",
+      "date_confirm" : "Confirmer le rendez-vous",
+      "scanPDF": "Scanner un document en PDF",
+      "send_doc":"Transmettre le(les) document(s)",
       "info":"""Le diagnostic, la prise en charge et le risque de mortalité estimé chez les patients souffrant d'hypertension ont toujours été basés sur les lectures de tension artérielle en clinique ou en cabinet. Les preuves actuelles indiquent que la surveillance ambulatoire de la pression artérielle 24 heures sur 24 devrait faire partie intégrante des soins de l'hypertension.
         
 Après 24 heures, le patient revient et les données sont téléchargées, y compris toute information demandée par le médecin dans un journal.
@@ -148,7 +191,7 @@ Les informations les plus utiles comprennent la tension artérielle moyenne sur 
       "text_dash":"Espace utilisateur",
       "my_exam":"Mes examens",
       "my_exam_text":"Liste de tous vos examens",
-      "calendar_exam":"Planifier l\'examen ABPM",
+      "calendar_exam":"Planifier l'examen ABPM",
       "calendar_exam_text":"Faite de tous les examens",
       "edit_exam":"Modifier un examen",
       "edit_exam_text":"Liste de tous vos examens",
@@ -177,9 +220,9 @@ Les informations les plus utiles comprennent la tension artérielle moyenne sur 
       "activities":['Activité','Étudiant','Travailleur','Manager','Chômeur','Retraite'],
       "situations":['Situation','Célibataire','Divorcé','Veuf'],
       "origins" : ['Origine', 'Asiatique','Européenne','Africaine','Nord-Américaine','Sud-Américaine'],
-      "confirm_data":"Confirmer vos infornmations",
-      "center_exam_data":"Informatiuon du centre",
-      "data_center": "Nom du Doctot / Hôpital",
+      "confirm_data":"Confirmer vos informations",
+      "center_exam_data":"Information du centre",
+      "data_center": "Nom du Docteur / Hôpital",
       "error_data": "Veuillez entrer le nom du médecin/hôpital",
       "address": "Adresse",
       "error_address": "Veuillez saisir votre adresse",
@@ -201,11 +244,33 @@ L’Appareil devra maintenir, aux frais du Locataire, l’Équipement en bon ét
 En cas de non-retour dans les délais, une pénalité de XXX USD sera appliquée. Jusqu'au paiement, tout résultat sera restitué.
 
 
-"""
+""",
+  "labels_config": {
+      ScannerLabelsConfig.PDF_GALLERY_EMPTY_TITLE: 'Documents',
+      ScannerLabelsConfig.PDF_GALLERY_EMPTY_MESSAGE: 'La galerie de PDF est vide',
+      ScannerLabelsConfig.PDF_GALLERY_FILLED_TITLE_SINGLE: 'Document PDF',
+      ScannerLabelsConfig.PDF_GALLERY_FILLED_TITLE_MULTIPLE: 'Documents PDF',
+      ScannerLabelsConfig.PDF_GALLERY_DONE_LABEL: 'Terminé',
+      ScannerLabelsConfig.PDF_GALLERY_ADD_IMAGE_LABEL: 'Scanner',
+      ScannerLabelsConfig.PICKER_CAMERA_LABEL: 'Appareil photo',
+      ScannerLabelsConfig.PICKER_GALLERY_LABEL: 'Galerie',
+      ScannerLabelsConfig.ANDROID_NEXT_BUTTON_LABEL: 'Suivant',
+      ScannerLabelsConfig.ANDROID_SAVE_BUTTON_LABEL: 'Enregistrer',
+      ScannerLabelsConfig.ANDROID_ROTATE_LEFT_LABEL: 'Rotation gauche',
+      ScannerLabelsConfig.ANDROID_ROTATE_RIGHT_LABEL: 'Rotation droite',
+      ScannerLabelsConfig.ANDROID_ORIGINAL_LABEL: 'Original',
+      ScannerLabelsConfig.ANDROID_BMW_LABEL: 'BMW',
+      ScannerLabelsConfig.ANDROID_SCANNING_MESSAGE: 'Numérisation en cours...',
+      ScannerLabelsConfig.ANDROID_LOADING_MESSAGE: 'Chargement...',
+      ScannerLabelsConfig.ANDROID_APPLYING_FILTER_MESSAGE: 'Application du filtre en cours...',
+      ScannerLabelsConfig.ANDROID_CANT_CROP_ERROR_TITLE: 'Impossible de rogner',
+      ScannerLabelsConfig.ANDROID_CANT_CROP_ERROR_MESSAGE: 'Impossible de rogner l\'image. Veuillez réessayer.',
+      ScannerLabelsConfig.ANDROID_OK_LABEL: 'OK',
+      }
     };
 
   }
 
-  return data[name];
+  return data![name];
 
 }

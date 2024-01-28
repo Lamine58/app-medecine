@@ -1,4 +1,3 @@
-// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
 import 'dart:async';
 import 'package:app_medcine/fuction/function.dart';
 import 'package:app_medcine/landing.dart';
@@ -22,7 +21,6 @@ class _AppState extends State<App> with TickerProviderStateMixin{
   late AnimationController _controller;
   late Animation<double> _animation;
 
-
   late AnimationController _controller_logo;
   late Animation<double> _animation_logo;
 
@@ -31,7 +29,7 @@ class _AppState extends State<App> with TickerProviderStateMixin{
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     
     if(prefs.getString('user')==null){
-      _navigatorKey.currentState?.pushReplacement(MaterialPageRoute(builder: (context) => Landing())); 
+      _navigatorKey.currentState?.pushReplacement(MaterialPageRoute(builder: (context) => const Landing())); 
     }else{
       _navigatorKey.currentState?.pushReplacement(MaterialPageRoute(builder: (context) => Container()));
     }
@@ -46,14 +44,14 @@ class _AppState extends State<App> with TickerProviderStateMixin{
 
     _controller = AnimationController(
       vsync: this,
-      duration: Duration(seconds: 3),
+      duration: const Duration(seconds: 3),
     );
 
     _animation = Tween<double>(begin: 0, end: 1).animate(_controller);
 
     _controller_logo = AnimationController(
       vsync: this,
-      duration: Duration(seconds: 1),
+      duration: const Duration(seconds: 1),
     );
 
     var count = 0;
@@ -111,7 +109,7 @@ class _AppState extends State<App> with TickerProviderStateMixin{
                     child: Container(
                       width: 45,
                       height: 90,
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                         image: DecorationImage(
                           image: AssetImage('assets/images/logo-marvel.png'),
                         ),
@@ -124,7 +122,7 @@ class _AppState extends State<App> with TickerProviderStateMixin{
               SizedBox(
                 width: 120,
                 child: ClipRRect(
-                  borderRadius: BorderRadius.all(Radius.circular(50)),
+                  borderRadius: const BorderRadius.all(Radius.circular(50)),
                   child: 
                   AnimatedBuilder(
                     animation: _animation,
@@ -132,7 +130,7 @@ class _AppState extends State<App> with TickerProviderStateMixin{
                       return LinearProgressIndicator(
                         minHeight: 5,
                         backgroundColor: Colors.white,
-                        valueColor: AlwaysStoppedAnimation<Color>(Color(0xff85d7ff)),
+                        valueColor: const AlwaysStoppedAnimation<Color>(Color(0xff85d7ff)),
                         value: _animation.value,
                       );
                     },

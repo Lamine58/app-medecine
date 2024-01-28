@@ -48,6 +48,15 @@ class _UserExamState extends State<UserExam> {
         situationController = situations[0];
         activityController = activities[0];
       });
+    }else{
+      setState(() {
+        origins = translate('origins',lang);
+        situations = translate('situations',lang);
+        activities = translate('activities',lang);
+        originController = origins[0];
+        situationController = situations[0];
+        activityController = activities[0];
+      });
     }
   }
   

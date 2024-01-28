@@ -8,8 +8,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 
 class Search extends StatefulWidget {
-  final item;
-  Search(this.item,{Key? key}) : super(key: key);
+  final dynamic item;
+  const Search(this.item,{Key? key}) : super(key: key);
 
   @override
   State<Search> createState() => _SearchState();
@@ -21,10 +21,11 @@ class _SearchState extends State<Search> {
   int selectedOption = 0;
   List filteredList = [];
   List itemList = [];
-  var next_page_url;
+  // ignore: prefer_typing_uninitialized_variables, non_constant_identifier_names
+  late dynamic next_page_url;
   TextEditingController searchController = TextEditingController();
   List options = [];
-  ScrollController _scrollController = ScrollController();
+  final ScrollController _scrollController = ScrollController();
 
   String lang = 'Français';
 
@@ -34,6 +35,7 @@ class _SearchState extends State<Search> {
     }
   }
 
+  @override
   void initState() {
     super.initState();
     init();
@@ -149,7 +151,7 @@ class _SearchState extends State<Search> {
             ),
           ),
           paddingTop(20),
-          load==false && filteredList.length==0
+          load==false && filteredList.isEmpty
           ? Expanded(
             child: Container(
               decoration: BoxDecoration(

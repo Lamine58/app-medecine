@@ -1,5 +1,4 @@
 // ignore_for_file: prefer_const_constructors, sort_child_properties_last, prefer_const_literals_to_create_immutables, unnecessary_new
-import 'package:app_medcine/exam/doc-exam.dart';
 import 'package:app_medcine/fuction/function.dart';
 import 'package:app_medcine/fuction/translate.dart';
 import 'package:flutter/material.dart';
@@ -20,7 +19,7 @@ class _PayExamState extends State<PayExam> {
   final TextEditingController cityController = TextEditingController();
   final TextEditingController zipCodeController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
-  final _formKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   late bool displayPassword = false;
   late bool spinner = false;
 

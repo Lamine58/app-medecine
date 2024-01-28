@@ -9,8 +9,8 @@ import 'package:flutter_map/flutter_map.dart';
 
 
 class Map extends StatefulWidget {
-  final item;
-  Map(this.item,{Key? key}) : super(key: key);
+  final dynamic item;
+  const Map(this.item,{Key? key}) : super(key: key);
 
   @override
   State<Map> createState() => _MapState();
@@ -18,15 +18,15 @@ class Map extends StatefulWidget {
 
 class _MapState extends State<Map> {
 
-  var load = false;
+  bool load = false;
   int selectedOption = 0;
   List filteredList = [];
   List itemList = [];
-  var next_page_url;
+  late dynamic next_page_url;
   TextEditingController searchController = TextEditingController();
   List options = [];
-  bool _isLoading = false;
-  ScrollController _scrollController = ScrollController();
+  final bool _isLoading = false;
+  final ScrollController _scrollController = ScrollController();
 
   String lang = 'Français';
 
@@ -36,6 +36,7 @@ class _MapState extends State<Map> {
     }
   }
 
+  @override
   void initState() {
     super.initState();
     init();

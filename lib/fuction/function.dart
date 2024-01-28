@@ -3,7 +3,7 @@ import 'package:flutter_native_image/flutter_native_image.dart';
 import 'package:flutter/material.dart';
 
 primaryColor() {
-  return Color(0xff00a6ff);
+  return const Color(0xff00a6ff);
 }
 
 paddingTop(height){
@@ -18,6 +18,7 @@ logo(width){
   return Image.asset('assets/images/logo-marvel.png',width: width.toDouble());
 }
 
+// ignore: non_constant_identifier_names
 logo_blue(width){
   return Image.asset('assets/images/logo-marvel-blue.png',width: width.toDouble());
 }
