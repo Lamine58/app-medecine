@@ -1,8 +1,8 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, depend_on_referenced_packages
 import 'package:app_medcine/auth/login.dart';
 import 'package:app_medcine/auth/sign-in.dart';
-import 'package:app_medcine/fuction/function.dart';
-import 'package:app_medcine/fuction/translate.dart';
+import 'package:app_medcine/function/function.dart';
+import 'package:app_medcine/function/translate.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -187,7 +187,7 @@ class _LandingState extends State<Landing> {
                     ],
                   ),
                 ),
-                logo_blue(120),
+                logo_blue(170),
                 Stack(
                   children: [
                     Center(child: Image.asset('assets/images/docteur-4.png',width: 300)),

@@ -1,5 +1,6 @@
 import 'dart:async';
-import 'package:app_medcine/fuction/function.dart';
+import 'package:app_medcine/dashboard/dashboard.dart';
+import 'package:app_medcine/function/function.dart';
 import 'package:app_medcine/landing.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -28,10 +29,10 @@ class _AppState extends State<App> with TickerProviderStateMixin{
 
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     
-    if(prefs.getString('user')==null){
+    if(prefs.getString('cutomerData')==null){
       _navigatorKey.currentState?.pushReplacement(MaterialPageRoute(builder: (context) => const Landing())); 
     }else{
-      _navigatorKey.currentState?.pushReplacement(MaterialPageRoute(builder: (context) => Container()));
+      _navigatorKey.currentState?.pushReplacement(MaterialPageRoute(builder: (context) => const Dashboard()));
     }
   }
 
@@ -96,29 +97,14 @@ class _AppState extends State<App> with TickerProviderStateMixin{
         useMaterial3: true,
       ),
       home:Container(
-        color: primaryColor(),
+        // color: primaryColor(),
+        color: Colors.white,
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              AnimatedBuilder(
-                animation: _controller_logo,
-                builder: (context, child) {
-                  return Transform.scale(
-                    scale: _animation_logo.value+2,
-                    child: Container(
-                      width: 45,
-                      height: 90,
-                      decoration: const BoxDecoration(
-                        image: DecorationImage(
-                          image: AssetImage('assets/images/logo-marvel.png'),
-                        ),
-                      ),
-                    ),
-                  );
-                },
-              ),
-              paddingTop(10),
+              logo_blue(210),
+              paddingTop(20),
               SizedBox(
                 width: 120,
                 child: ClipRRect(
@@ -128,9 +114,9 @@ class _AppState extends State<App> with TickerProviderStateMixin{
                     animation: _animation,
                     builder: (context, child) {
                       return LinearProgressIndicator(
-                        minHeight: 5,
-                        backgroundColor: Colors.white,
-                        valueColor: const AlwaysStoppedAnimation<Color>(Color(0xff85d7ff)),
+                        minHeight: 4.5,
+                        backgroundColor: const Color(0xff85d7ff),
+                        valueColor: AlwaysStoppedAnimation<Color>(primaryColor()),
                         value: _animation.value,
                       );
                     },

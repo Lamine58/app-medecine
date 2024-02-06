@@ -4,8 +4,6 @@ import 'dart:io';
 // import 'dart:js_interop';
 import 'package:app_medcine/api/api.dart';
 import 'package:app_medcine/exam/code.dart';
-import 'package:app_medcine/exam/exam-date.dart';
-import 'package:app_medcine/exam/pay-exam.dart';
 import 'package:app_medcine/function/function.dart';
 import 'package:app_medcine/function/translate.dart';
 import 'package:document_scanner_flutter/configs/configs.dart';
@@ -17,17 +15,18 @@ import 'package:file_picker/file_picker.dart';
 import 'package:path/path.dart';
 import 'package:document_scanner_flutter/document_scanner_flutter.dart';
 
-class DocExam extends StatefulWidget {
+class CardCustomer extends StatefulWidget {
 
   final type_exam;
   final item;
-  const DocExam(this.type_exam,this.item,{super.key});
+  final date;
+  const CardCustomer(this.type_exam,this.item,this.date,{super.key});
 
   @override
-  State<DocExam> createState() => _DocExamState();
+  State<CardCustomer> createState() => _CardCustomerState();
 }
 
-class _DocExamState extends State<DocExam> {
+class _CardCustomerState extends State<CardCustomer> {
 
   String lang = 'Français';
   final TextEditingController requestController = TextEditingController();
@@ -85,9 +84,9 @@ class _DocExamState extends State<DocExam> {
 
       var data = {
         "type_exam_id":widget.type_exam['id'],
-        "order":requestController.text,
         "customer_id":id,
         "business_id":widget.item['id'],
+        "date":widget.date,
       };
 
       var files = [];
@@ -96,7 +95,7 @@ class _DocExamState extends State<DocExam> {
         files.add(item);
       });
 
-      response = await api.uploadMultiFile('add-exam',files,data);
+      response = await api.uploadMultiFile('add-exam-card',files,data);
 
       if (response['status'] == 'success') {
 
@@ -197,6 +196,9 @@ class _DocExamState extends State<DocExam> {
 
   Future<void> getAdditionalDataFromDocScanner(int index,context) async {
     try {
+      // `scannedDoc` will be the PDF file generated from scanner
+      // We can use launch instead of launchForPdf to generate an image file from scanner
+      // ScannerFileSource.GALLERY instead of ScanFileSource.CAMERA intuitively
       File? scannedDoc = (index == 0) ? 
       await DocumentScannerFlutter.launch(context, source: ScannerFileSource.CAMERA, labelsConfig: translate('labels_config', lang))
       :
@@ -242,7 +244,7 @@ class _DocExamState extends State<DocExam> {
         backgroundColor: primaryColor(),
         elevation: 0,
       ),
-      body: SizedBox(
+      body: Center(
         child: SingleChildScrollView(
           child: Container(
             padding: EdgeInsets.all(20),
@@ -254,80 +256,16 @@ class _DocExamState extends State<DocExam> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        TextFormField(
-                          textInputAction: TextInputAction.next,
-                          maxLines: 3,
-                          controller: requestController,
-                          style: TextStyle(color: Colors.black,fontWeight: FontWeight.w300,fontSize: 14),
-                          decoration: InputDecoration(
-                            contentPadding: EdgeInsets.only(left:15,top: 15,bottom: 20,right: 15),
-                            labelText: translate('query', lang),
-                            labelStyle: TextStyle(color: Color.fromARGB(255, 120, 120, 120),fontWeight: FontWeight.w300,fontSize: 14),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(5),
-                            ),
-                            filled: true,
-                            fillColor: Color.fromARGB(255, 204, 204, 204).withOpacity(0.3),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(5),
-                              borderSide: BorderSide(
-                                color: Color.fromARGB(134, 255, 255, 255),
-                              )
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(5),
-                              borderSide: BorderSide(
-                                color: Color.fromARGB(134, 255, 255, 255),
-                              )
-                            ),
-                          ),
-                          keyboardType: TextInputType.name,
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return translate('error_query', lang);
-                            }
-                            return null;
-                          },
+                        Padding(
+                          padding: const EdgeInsets.all(10),
+                          child: Text(translate('text_card', lang),style: TextStyle(fontSize: 14),textAlign: TextAlign.center,),
                         ),
-                        paddingTop(15),
+                        paddingTop(20),
                         GestureDetector(
                           onTap: getAdditionalData,
                           child: translate('upload',lang)
                         ),
                         paddingTop(10),
-                        Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(5)
-                            ),
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: <Widget> [
-                              IconButton(
-                                onPressed: () {
-                                  getAdditionalDataFromDocScanner(0,context);
-                                },
-                                icon: Icon(
-                                  Icons.add_a_photo_sharp,
-                                  size: 36,
-                                  color: Color(0xff00a6ff),
-                                ),
-                              ),
-                              IconButton(
-                                onPressed: () {
-                                  getAdditionalDataFromDocScanner(1,context);
-                                },
-                                icon: Icon(
-                                  Icons.document_scanner_rounded,
-                                  size: 36,
-                                  color: Color(0xff00a6ff),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        paddingTop(15),
                         GridView.count(
                           shrinkWrap: true,
                           crossAxisCount: 4,
@@ -375,33 +313,6 @@ class _DocExamState extends State<DocExam> {
                               ],
                             );
                           }).toList(),
-                        ),
-                        paddingTop(20),
-                        ElevatedButton(
-                          onPressed: spinner==true ? null : () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => ExamDate(widget.type_exam,widget.item),
-                              ),
-                            ); 
-                          },
-                          child: spinner==true ? CircularProgressIndicator(color: const Color.fromARGB(135, 255, 255, 255)) : Container(
-                            width: double.infinity,
-                            padding: EdgeInsets.all(15),
-                            child: Center(
-                              child: Text(translate('no_document', lang),
-                                style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w300)
-                              ),
-                            ),
-                          ),
-                          style: ElevatedButton.styleFrom(
-                            elevation: 0,
-                            backgroundColor: primaryColor(),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(5),
-                            ),
-                          ),
                         ),
                         paddingTop(10),
                         ElevatedButton(

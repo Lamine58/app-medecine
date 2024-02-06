@@ -1,13 +1,19 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, avoid_unnecessary_containers
-import 'package:app_medcine/fuction/function.dart';
-import 'package:app_medcine/fuction/translate.dart';
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, avoid_unnecessary_containers, deprecated_member_use, depend_on_referenced_packages
+import 'dart:convert';
+import 'dart:io';
+
+import 'package:app_medcine/api/api.dart';
+import 'package:app_medcine/function/function.dart';
+import 'package:app_medcine/function/translate.dart';
 import 'package:bootstrap_icons/bootstrap_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:printing/printing.dart';
 import 'package:pdf/pdf.dart';
-import 'package:pdf/widgets.dart' as pw;
+import 'package:http/http.dart' as http;
+import 'package:path_provider/path_provider.dart';
+import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
 
 class Exams extends StatefulWidget {
@@ -20,69 +26,20 @@ class Exams extends StatefulWidget {
 
 class _ExamsState extends State<Exams> {
 
-  var load = false;
+  var load = true;
   int selectedOption = 0;
-  List<Map<String,String>> filteredList = [
-    {
-      "name":"Examen 1",
-      "amount":"2000 XOF - WAVE CI",
-      "date":"03 janvier 2024",
-    },
-    {
-      "name":"Examen 2",
-      "amount":"1000 XOF - WAVE CI",
-      "date":"03 janvier 2024",
-    },
-    {
-      "name":"Examen 3",
-      "amount":"2000 XOF - WAVE CI",
-      "date":"03 janvier 2024",
-    },
-    {
-      "name":"Examen 4",
-      "amount":"7200 XOF - WAVE CI",
-      "date":"03 janvier 2024",
-    },
-    {
-      "name":"Examen 5",
-      "amount":"9000 XOF - WAVE CI",
-      "date":"03 janvier 2024",
-    }
-  ];
-  List<Map<String,String>> itemList = [
-    {
-      "name":"Examen 1",
-      "amount":"2000 XOF - WAVE CI",
-      "date":"03 janvier 2024",
-    },
-    {
-      "name":"Examen 2",
-      "amount":"1000 XOF - WAVE CI",
-      "date":"03 janvier 2024",
-    },
-    {
-      "name":"Examen 3",
-      "amount":"2000 XOF - WAVE CI",
-      "date":"03 janvier 2024",
-    },
-    {
-      "name":"Examen 4",
-      "amount":"7200 XOF - WAVE CI",
-      "date":"03 janvier 2024",
-    },
-    {
-      "name":"Examen 5",
-      "amount":"9000 XOF - WAVE CI",
-      "date":"03 janvier 2024",
-    }
-  ];
+  var filteredList = [];
+  var itemList = [];
   // ignore: non_constant_identifier_names
   dynamic next_page_url;
   TextEditingController searchController = TextEditingController();
   List options = [];
   final ScrollController _scrollController = ScrollController();
+  late Api api = Api();
 
   String lang = 'Français';
+  String locale = 'fr_FR';
+  String base = '';
 
   void _scrollListener() {
     if (_scrollController.position.pixels ==
@@ -96,17 +53,47 @@ class _ExamsState extends State<Exams> {
     init();
     searchController.addListener(filterItems);
     _scrollController.addListener(_scrollListener);
+    base = api.getbaseUpload();
   }
 
   init() async {
+    
     final SharedPreferences prefs = await SharedPreferences.getInstance();
+    var data = jsonDecode(prefs.getString('cutomerData')!);
+
     if(prefs.getString('lang')!=null){
       setState(() {
         lang = prefs.getString('lang')!;
+        if(lang =='Français'){
+          locale ='fr_FR';
+        }else{
+          locale ='en_US';
+        }
       });
     }
+    
+    setState(() {
+      getData(data['customer']['id']);
+    });
   }
 
+  getData(id) async {
+    
+    var response = await api.get('exam-customer?id=$id');
+
+    try{
+      if (response['status'] == 'success') {
+        setState(() {
+          itemList = response['exams'];
+          filteredList = itemList;
+          load = false;
+        });
+      }
+    }catch(err){}
+
+  }
+
+  
   _diplayView(item,context){
 
     return showModalBottomSheet(
@@ -137,8 +124,12 @@ class _ExamsState extends State<Exams> {
                     padding: EdgeInsets.only(bottom:20,right: 15,left: 15,top: 10),
                     child: Column(
                       children: [
-                        Image.asset('assets/images/print.png'),
-                        Expanded(child: SizedBox()),
+                        Expanded(
+                          child: SfPdfViewer.network(
+                            base+item['results'][0],
+                          )
+                        ),
+                        paddingTop(20),
                         SizedBox(
                           width: double.infinity, 
                           height: 50,
@@ -153,8 +144,8 @@ class _ExamsState extends State<Exams> {
                                       borderRadius: BorderRadius.circular(5),
                                     ),
                                   ),
-                                  onPressed: (){
-                                    Share.shareXFiles([XFile('assets/images/print.jpg')], text: 'Test de partarge');
+                                  onPressed: () async {
+                                    _sharePdf(base+item['results'][0],item['type_exam']['name']+' - '+item['code']);
                                   },
                                   child: Row(
                                     children: [
@@ -176,23 +167,7 @@ class _ExamsState extends State<Exams> {
                                     ),
                                   ),
                                   onPressed: (){
-                                    Printing.layoutPdf(
-                                      onLayout: (PdfPageFormat format) async {
-                                        final pdfDoc = pw.Document();
-                                        final image = await imageFromAssetBundle('assets/images/print.jpg');
-
-                                        pdfDoc.addPage(pw.Page(
-                                          pageFormat: format,
-                                          build: (pw.Context context) {
-                                            return pw.Center(
-                                              child: pw.Image(image),
-                                            );
-                                          },
-                                        ));
-
-                                        return pdfDoc.save();
-                                      },
-                                    );
+                                    _printPdf(base+item['results'][0]);
                                   },
                                   child: Row(
                                     children: [
@@ -219,11 +194,56 @@ class _ExamsState extends State<Exams> {
     );
   }
 
+  _printPdf(String url) async {
+
+    final String pdfUrl = url;
+
+    final http.Response response = await http.get(Uri.parse(pdfUrl));
+    var bytes = response.bodyBytes;
+
+    final Directory appDocDir = await getApplicationDocumentsDirectory();
+    final String filePath = '${appDocDir.path}/temp_pdf.pdf';
+    File file = File(filePath);
+    await file.writeAsBytes(bytes);
+
+    await Printing.layoutPdf(
+      onLayout: (PdfPageFormat format) async => bytes,
+    );
+  }
+
+  _sharePdf(String url,nameFile) async {
+
+    final String pdfUrl = url;
+
+    final http.Response response = await http.get(Uri.parse(pdfUrl));
+    var bytes = response.bodyBytes;
+
+    final Directory appDocDir = await getApplicationDocumentsDirectory();
+    final String filePath = '${appDocDir.path}/${nameFile}.pdf';
+    File file = File(filePath);
+    await file.writeAsBytes(bytes);
+
+    await Share.shareFiles([file.path], text: nameFile);
+
+  }
+  
   void filterItems() {
     String query = searchController.text.toLowerCase();
     setState(() {
-      filteredList = itemList.where((item) =>  item['name'].toString().toLowerCase().contains(query)).toList();
+      filteredList = itemList.where((item) =>  
+        item['type_exam']['name'].toString().toLowerCase().contains(query) ||
+        item['code'].toString().toLowerCase().contains(query)
+      ).toList();
     });
+  }
+
+  String format(int number) {
+    String numberString = number.toString();
+    int length = numberString.length;
+    for (int i = length - 3; i > 0; i -= 3) {
+      numberString = '${numberString.substring(0, i)} ${numberString.substring(i)}';
+    }
+    return numberString;
   }
 
   @override
@@ -346,7 +366,8 @@ class _ExamsState extends State<Exams> {
                           width: double.infinity,
                           child: GestureDetector(
                             onTap: () {
-                              _diplayView(item,context);
+                              if(item['results']!=null)
+                                _diplayView(item,context);
                             },
                             child: Container(
                               padding: EdgeInsets.all(10),
@@ -363,15 +384,15 @@ class _ExamsState extends State<Exams> {
                                       child: Column(
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
-                                          Text(item['name'] ?? '',textAlign:TextAlign.start,style: TextStyle(fontWeight: FontWeight.bold,fontFamily: 'Roboto',fontSize: 15)),
+                                          Text(item['type_exam']['name'] ?? '',textAlign:TextAlign.start,style: TextStyle(fontWeight: FontWeight.bold,fontFamily: 'Roboto',fontSize: 15)),
                                           paddingTop(3),
-                                          Text('${item['amount']}',textAlign:TextAlign.start,style: TextStyle(fontFamily: 'Roboto')),
-                                          Text(item['date'] ?? '',textAlign:TextAlign.start,style: TextStyle(fontFamily: 'Roboto',fontSize: 12)),
+                                          Text('CODE : ${format(int.parse(item['code']))}',textAlign:TextAlign.start,style: TextStyle(fontFamily: 'Roboto')),
+                                          Text(formatDate(DateTime.parse(item['time']),locale),textAlign:TextAlign.start,style: TextStyle(fontFamily: 'Roboto',fontSize: 12)),
                                         ],
                                       ),
                                     ),
                                   ),
-                                  Icon(Icons.chevron_right,color: primaryColor())
+                                  item['results']==null ? Text(translate('pending', lang),style: TextStyle(fontSize: 10)) : Text(translate('result', lang),style: TextStyle(fontSize: 10))
                                 ],
                               ),
                             ),

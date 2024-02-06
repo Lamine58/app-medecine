@@ -18,7 +18,7 @@ translate(name,lang){
       "error_password": "Please enter your password",
       "label_email": "Email",
       "label_password": "Password",
-      "submit_login": "Log in",
+      "submit_login": "Login",
       "label_first_name": "First name",
       "error_first_name": "Please enter your name",
       "label_last_name": "Last name",
@@ -28,7 +28,7 @@ translate(name,lang){
       "label_location": "Address",
       "error_location": "Please enter your address",
       "label_phone": "Phone",
-      "error_phone": "Please enter your phone",
+      "error_phone": "Please enter your phone valid",
       "label_man": "Man",
       "label_woman": "Woman",
       "print": "Print",
@@ -54,7 +54,7 @@ After 24 hours, the patient returns, and the data are downloaded, including any 
 The most useful information includes the 24-hour average blood pressure, the average daytime blood pressure, the average nighttime blood pressure, and the calculated percentage drop in blood pressure at night.   
       """,
       "validate":"I agree with this terms of use",
-      "welcome_dash":"Welcome to",
+      "welcome_dash":"Welcome",
       "text_dash":"User space",
       "my_exam":"My exams",
       "my_exam_text":"List of all your exams",
@@ -134,7 +134,31 @@ In cas of none return in the exact time a penalty of XXX USD will be apply. Unti
         ScannerLabelsConfig.ANDROID_CANT_CROP_ERROR_TITLE: 'Unable to crop',
         ScannerLabelsConfig.ANDROID_CANT_CROP_ERROR_MESSAGE: 'Unable to crop image. Try Again.',
         ScannerLabelsConfig.ANDROID_OK_LABEL: 'OK',
-      }
+      },
+      "no_document":"No document",
+      "text_otp":"Please enter your confirmation code to send by SMS",
+      "verify":"Verification",
+      "retry":"Re-drown the code",
+      "file_exam": "My file",
+      "file_exam_text": "Registering your information",
+      "calling": "Call",
+      "geolocation": "Location",
+      "empty_exam_center_action":"Currently this center does not offer exam services",
+      "do_exam":"Take the exam",
+      "open_library":'Open gallery',
+      "open_camera": "Open camera",
+      "required_file":"Please select the necessary documents",
+      "wait":"Please wait...",
+      "confirmation": "Confirmation code",
+      "code_message":"""This registration number must be given to your examination center for loading information onto the analysis device
+
+This code will be available in your 'My exams' section """,
+      "end":"Finish",
+      "text_card": """To confirm your identity please scan/download the document below
+
+ (Passport / Identity card / Unknown)""",
+      "result":'Results\nAvailable',
+      "pending":"Pending"
     };
 
   }else if(lang=='Français'){
@@ -160,7 +184,7 @@ In cas of none return in the exact time a penalty of XXX USD will be apply. Unti
       "label_location": "Adresse",
       "error_location": "Veuillez saisir votre adresse",
       "label_phone": "Téléphone",
-      "error_phone": 'Veuillez saisir votre téléphone',
+      "error_phone": 'Saisir un téléphone valide',
       "label_man": "Homme",
       "label_woman": "Femme",
       "print": "Imprimer",
@@ -187,7 +211,7 @@ Après 24 heures, le patient revient et les données sont téléchargées, y com
 Les informations les plus utiles comprennent la tension artérielle moyenne sur 24 heures, la tension artérielle moyenne diurne, la tension artérielle nocturne moyenne et le pourcentage calculé de baisse de la tension artérielle la nuit.
        """,
       "validate": "J'accepte ces conditions d'utilisation",
-      "welcome_dash":"Bienvenue sur",
+      "welcome_dash":"Bienvenue",
       "text_dash":"Espace utilisateur",
       "my_exam":"Mes examens",
       "my_exam_text":"Liste de tous vos examens",
@@ -266,7 +290,31 @@ En cas de non-retour dans les délais, une pénalité de XXX USD sera appliquée
       ScannerLabelsConfig.ANDROID_CANT_CROP_ERROR_TITLE: 'Impossible de rogner',
       ScannerLabelsConfig.ANDROID_CANT_CROP_ERROR_MESSAGE: 'Impossible de rogner l\'image. Veuillez réessayer.',
       ScannerLabelsConfig.ANDROID_OK_LABEL: 'OK',
-      }
+      },
+      "no_document":"Pas de document",
+      "text_otp":"Veuillez saisir votre code de confirmation envoyer par SMS",
+      "verify":"Vérificaton",
+      "retry":"Renoyer le code",
+      "file_exam": "Ma fiche",
+      "file_exam_text": "Enregistrement de vos infromations",
+      "calling": "Appelez",
+      "geolocalisation": "Localisation",
+      "empty_exam_center_action":"Actuellement, ce centre ne propose pas de services d'examen",
+      "do_exam":"Faire l'examen",
+      "open_library":'Ouvrir la galerie',
+      "open_camera": "Ouvrir l'appareil photo",
+      "required_file":"Veuillez sélectionner les documents nécessaires",
+      "wait":"Veuillez patienter ...",
+      "confirmation": "Code de confirmation",
+      "code_message":"""Ce numéro d'enregistrement est à donner à votre centre d'examen pour le chargement des informations sur l'appareil d'analyse
+
+Ce code sera disponible dans votre section 'Mes examens' """,
+      "end":"Terminer",
+      "text_card": """Pour confirmer votre identité veuillez scanner/télécharger le document ci-dessous
+
+ (Passeport / Carte d'identité / Insu)""",
+      "result":'Resultats\nDisponible',
+      "pending":"En attente"
     };
 
   }

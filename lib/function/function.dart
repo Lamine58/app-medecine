@@ -1,9 +1,15 @@
 import 'dart:io';
 import 'package:flutter_native_image/flutter_native_image.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/date_symbol_data_local.dart';
+import 'package:intl/intl.dart';
 
 primaryColor() {
-  return const Color(0xff00a6ff);
+  return const Color(0xff528ed6);
+}
+
+grayColor() {
+  return Color.fromARGB(255, 196, 196, 196);
 }
 
 paddingTop(height){
@@ -49,4 +55,10 @@ Future<File> compressImage(String imagePath, {int targetSize = 0}) async {
   } while (targetSize > 0 && compressedImage.lengthSync() > targetSize && quality > 0);
 
   return compressedImage;
+}
+
+
+String formatDate(DateTime dateTime, String locale) {
+  initializeDateFormatting();
+  return  DateFormat.yMMMMEEEEd(locale).format(dateTime);
 }

@@ -1,9 +1,13 @@
 // ignore_for_file: avoid_unnecessary_containers, prefer_const_literals_to_create_immutables, prefer_const_constructors, sort_child_properties_last, non_constant_identifier_names, prefer_typing_uninitialized_variables, use_build_context_synchronously
+import 'dart:convert';
+
+import 'package:app_medcine/api/api.dart';
 import 'package:app_medcine/auth/login.dart';
+import 'package:app_medcine/customer/customer.dart';
 import 'package:app_medcine/exam/exam.dart';
 import 'package:app_medcine/exam/exams.dart';
-import 'package:app_medcine/fuction/function.dart';
-import 'package:app_medcine/fuction/translate.dart';
+import 'package:app_medcine/function/function.dart';
+import 'package:app_medcine/function/translate.dart';
 import 'package:bootstrap_icons/bootstrap_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -17,23 +21,59 @@ class Dashboard extends StatefulWidget {
 
 class _DashboardState extends State<Dashboard> {
 
-
   String lang = 'Français';
   var app_name = 'ANEPAM';
+  var last_name = '';
+  var base = '';
+  var id = '';
+  var avatar;
+  late Api api = Api();
 
   @override
   void initState() {
     super.initState();
+    base = api.getbaseUpload();
     init();
   }
 
   init() async {
+
     final SharedPreferences prefs = await SharedPreferences.getInstance();
+    var data = jsonDecode(prefs.getString('cutomerData')!);
+
     if(prefs.getString('lang')!=null){
       setState(() {
         lang = prefs.getString('lang')!;
       });
     }
+    setState(() {
+      last_name = data['customer']['last_name'];
+      avatar = data['customer']['avatar'];
+      id = data['customer']['id'];
+    });
+
+    refresh(data,prefs);
+  }
+  
+  refresh(data,prefs) async {
+    
+    var response = await api.post('user', {"id":data['customer']['id']});
+
+    try{
+      if (response['status'] == 'success') {
+        data = response;
+        await prefs.setString('cutomerData', jsonEncode(response));
+        setState(() {
+          last_name = data['customer']['last_name'];
+          avatar = data['customer']['avatar'];
+        });
+      }
+    }catch(err){}
+
+  }
+
+  networkImage(){
+    return NetworkImage(base+avatar);
   }
 
   @override
@@ -60,7 +100,7 @@ class _DashboardState extends State<Dashboard> {
                       GestureDetector(
                         onTap: () async {
                           final SharedPreferences prefs = await SharedPreferences.getInstance();
-                          prefs.remove('user');
+                          prefs.remove('cutomerData');
                           Navigator.pushAndRemoveUntil(
                             context,
                             MaterialPageRoute(builder: (context) => Login()),
@@ -74,30 +114,37 @@ class _DashboardState extends State<Dashboard> {
                       ),
                       GestureDetector(
                         onTap: (){
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => Customer(null)),
+                          );
                         },
                         child: CircleAvatar(
-                          backgroundImage: AssetImage('assets/images/avatar-2.png'),
-                          radius: 27,
+                          backgroundColor: Color.fromARGB(73, 255, 255, 255),
+                          backgroundImage: 
+                          avatar==null
+                          ? AssetImage('assets/images/avatar-2.png')
+                          : networkImage(),
+                          radius: 35,
                         ),
                       )
                     ],
                   ),
                   Text(
-                    translate('welcome_dash', lang)+' $app_name',
-                    style: TextStyle(fontSize: 23, color: Colors.white, fontWeight: FontWeight.w700),
+                    translate('welcome_dash', lang)+' $last_name',
+                    style: TextStyle(fontSize: 23, color: Colors.white, fontWeight: FontWeight.w300),
                     textAlign: TextAlign.start,
                   ),
                   paddingTop(5),
                   Text(
-                    translate('text_dash', lang),
+                    translate('text_dash', lang)+' $app_name',
                     style: TextStyle(fontSize: 14, color: Colors.white, fontWeight: FontWeight.w200),
                     textAlign: TextAlign.center,
                   ),
                   paddingTop(15),
                 ],
               ),
-            ),
-            Expanded(
+            ),Expanded(
               child: Container(
                 padding: EdgeInsets.all(15),
                 width: double.infinity,
@@ -221,7 +268,7 @@ class _DashboardState extends State<Dashboard> {
                         onTap: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => Exams('Liste des examens')),
+                            MaterialPageRoute(builder: (context) => Customer(null)),
                           );
                         },
                         child: Padding(
@@ -236,7 +283,7 @@ class _DashboardState extends State<Dashboard> {
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(7),
                                     image: DecorationImage(
-                                      image: AssetImage('assets/images/6467030.webp'),
+                                      image: AssetImage('assets/images/5023500.webp'),
                                       fit: BoxFit.cover,
                                     ),
                                   ),
@@ -246,8 +293,8 @@ class _DashboardState extends State<Dashboard> {
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      Text(translate('edit_exam',lang),style: TextStyle(fontSize: 21)),
-                                      Text(translate('edit_exam_text',lang),style: TextStyle(fontSize: 12)),
+                                      Text(translate('file_exam',lang),style: TextStyle(fontSize: 21)),
+                                      Text(translate('file_exam_text',lang),style: TextStyle(fontSize: 12)),
                                     ],
                                   ),
                                 ),
