@@ -24,6 +24,8 @@ class Customer extends StatefulWidget {
 class _CustomerState extends State<Customer> {
 
   String lang = 'Français';
+  final TextEditingController firstNameController = TextEditingController();
+  final TextEditingController lastNameController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController locationController = TextEditingController();
@@ -85,6 +87,8 @@ class _CustomerState extends State<Customer> {
       id = data['customer']['id'];
       _avatar_url = data['customer']['avatar'];
       emailController.text = data['customer']['email'] ?? '';
+      firstNameController.text = data['customer']['first_name'] ?? '';
+      lastNameController.text = data['customer']['last_name'] ?? '';
       locationController.text = data['customer']['location'] ?? '';
       weightController.text = data['customer']['weight'] ?? '';
       sizeController.text = data['customer']['size'] ?? '';
@@ -190,6 +194,8 @@ class _CustomerState extends State<Customer> {
         response = await api.upload('customer-data',photo, {
           "id": id,
           "email": emailController.text,
+          "first_name": firstNameController.text,
+          "last_name": lastNameController.text,
           "location": locationController.text,
           "weight": weightController.text,
           "size": sizeController.text,
@@ -205,6 +211,8 @@ class _CustomerState extends State<Customer> {
         response = await api.post('customer-data', {
           "id": id,
           "email": emailController.text,
+          "first_name": firstNameController.text,
+          "last_name": lastNameController.text,
           "location": locationController.text,
           "weight": weightController.text,
           "size": sizeController.text,
@@ -395,6 +403,76 @@ class _CustomerState extends State<Customer> {
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return translate('error_email', lang);
+                            }
+                            return null;
+                          },
+                        ),
+                        paddingTop(15),
+                        TextFormField(
+                          textInputAction: TextInputAction.next,
+                          controller: firstNameController,
+                          style: TextStyle(color: Colors.black,fontWeight: FontWeight.w300),
+                          decoration: InputDecoration(
+                            contentPadding: EdgeInsets.only(left:15,top: 15,bottom: 20,right: 15),
+                            labelText: translate('label_first_name', lang),
+                            labelStyle: TextStyle(color: Color.fromARGB(255, 120, 120, 120),fontWeight: FontWeight.w300),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                            filled: true,
+                            fillColor: Color.fromARGB(255, 204, 204, 204).withOpacity(0.3),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(5),
+                              borderSide: BorderSide(
+                                color: Color.fromARGB(134, 255, 255, 255),
+                              )
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(5),
+                              borderSide: BorderSide(
+                                color: Color.fromARGB(134, 255, 255, 255),
+                              )
+                            ),
+                          ),
+                          keyboardType: TextInputType.emailAddress,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return translate('error_first_name', lang);
+                            }
+                            return null;
+                          },
+                        ),
+                        paddingTop(15),
+                        TextFormField(
+                          textInputAction: TextInputAction.next,
+                          controller: lastNameController,
+                          style: TextStyle(color: Colors.black,fontWeight: FontWeight.w300),
+                          decoration: InputDecoration(
+                            contentPadding: EdgeInsets.only(left:15,top: 15,bottom: 20,right: 15),
+                            labelText: translate('label_last_name', lang),
+                            labelStyle: TextStyle(color: Color.fromARGB(255, 120, 120, 120),fontWeight: FontWeight.w300),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                            filled: true,
+                            fillColor: Color.fromARGB(255, 204, 204, 204).withOpacity(0.3),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(5),
+                              borderSide: BorderSide(
+                                color: Color.fromARGB(134, 255, 255, 255),
+                              )
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(5),
+                              borderSide: BorderSide(
+                                color: Color.fromARGB(134, 255, 255, 255),
+                              )
+                            ),
+                          ),
+                          keyboardType: TextInputType.emailAddress,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return translate('error_last_name', lang);
                             }
                             return null;
                           },

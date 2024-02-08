@@ -35,6 +35,7 @@ translate(name,lang){
       "search":"Search",
       "share": "Share",
       "empty_exam":"No exam found",
+      "empty_archive":"No archive found",
       "or":"Or",
       "inquiry":"Medical inquiries",
       "date_title" : "All exams start at 8:30am and must be take before the wish day and hour.",
@@ -158,7 +159,12 @@ This code will be available in your 'My exams' section """,
 
  (Passport / Identity card / Unknown)""",
       "result":'Results\nAvailable',
-      "pending":"Pending"
+      "pending":"Pending",
+      "archive_exam": "My archives",
+      "archive_text": "List of your medical archives",
+      "register_date":"Registration date",
+      "exam_date":"Exam date",
+      "exam":'Exam',
     };
 
   }else if(lang=='Français'){
@@ -314,7 +320,13 @@ Ce code sera disponible dans votre section 'Mes examens' """,
 
  (Passeport / Carte d'identité / Insu)""",
       "result":'Resultats\nDisponible',
-      "pending":"En attente"
+      "pending":"En attente",
+      "archive_exam":"Mes archives",
+      "archive_text":"Liste de vos archives médicals",
+      "empty_archive":"Aucun archive",
+      "register_date":"Date d'enreistrement",
+      "exam_date":"Date de l'examen",
+      "exam":'Examen',
     };
 
   }

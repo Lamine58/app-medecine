@@ -16,15 +16,15 @@ import 'package:path_provider/path_provider.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
 
-class Exams extends StatefulWidget {
+class Archives extends StatefulWidget {
   final dynamic item;
-  const Exams(this.item,{Key? key}) : super(key: key);
+  const Archives(this.item,{Key? key}) : super(key: key);
 
   @override
-  State<Exams> createState() => _ExamsState();
+  State<Archives> createState() => _ArchivesState();
 }
 
-class _ExamsState extends State<Exams> {
+class _ArchivesState extends State<Archives> {
 
   var load = true;
   int selectedOption = 0;
@@ -79,12 +79,12 @@ class _ExamsState extends State<Exams> {
 
   getData(id) async {
     
-    var response = await api.get('exam-customer?id=$id');
+    var response = await api.get('archive-customer?id=$id');
 
     try{
       if (response['status'] == 'success') {
         setState(() {
-          itemList = response['exams'];
+          itemList = response['archives'];
           filteredList = itemList;
           load = false;
         });
@@ -107,6 +107,7 @@ class _ExamsState extends State<Exams> {
           child: SizedBox(
             height: MediaQuery.of(context).size.height*0.9,
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 paddingTop(10),
                 Center(
@@ -119,14 +120,25 @@ class _ExamsState extends State<Exams> {
                     ),
                   ),
                 ),
+                Padding(
+                  padding: EdgeInsets.all(15),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(translate('exam', lang)+' : '+item['other_exam']['name'],textAlign: TextAlign.left,),
+                      Text(translate('exam_date', lang)+' : '+formatDate(DateTime.parse(item['date']), locale),textAlign: TextAlign.left,),
+                      Text(translate('register_date', lang)+' : '+formatDate(DateTime.parse(item['time']), locale),textAlign: TextAlign.left,),
+                    ],
+                  ),
+                ),
                 Expanded(
                   child: Container(
-                    padding: EdgeInsets.only(bottom:20,right: 15,left: 15,top: 10),
+                    padding: EdgeInsets.only(bottom:20,right: 15,left: 15,top: 0),
                     child: Column(
                       children: [
                         Expanded(
                           child: SfPdfViewer.network(
-                            base+item['results'][0],
+                            base+item['file'],
                           )
                         ),
                         paddingTop(20),
@@ -145,7 +157,7 @@ class _ExamsState extends State<Exams> {
                                     ),
                                   ),
                                   onPressed: () async {
-                                    _sharePdf(base+item['results'][0],item['type_exam']['name']+' - '+item['code']);
+                                    _sharePdf(base+item['file'],item['other_exam']['name']+' - '+item['time']);
                                   },
                                   child: Row(
                                     children: [
@@ -167,7 +179,7 @@ class _ExamsState extends State<Exams> {
                                     ),
                                   ),
                                   onPressed: (){
-                                    _printPdf(base+item['results'][0]);
+                                    _printPdf(base+item['file']);
                                   },
                                   child: Row(
                                     children: [
@@ -257,7 +269,7 @@ class _ExamsState extends State<Exams> {
         toolbarHeight: 40,
         elevation: 0,
         title: Text(
-          translate('my_exam', lang),
+          translate('archive_exam', lang),
           style: TextStyle(
             fontSize: 15,
             fontWeight: FontWeight.w200,
@@ -324,7 +336,7 @@ class _ExamsState extends State<Exams> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Center(
-                    child : Text(translate('empty_exam', lang))
+                    child : Text(translate('empty_archive', lang))
                   ),
                 ],
               ),
@@ -366,7 +378,7 @@ class _ExamsState extends State<Exams> {
                           width: double.infinity,
                           child: GestureDetector(
                             onTap: () {
-                              if(item['results']!=null)
+                              if(item['file']!=null)
                                 _diplayView(item,context);
                             },
                             child: Container(
@@ -384,15 +396,14 @@ class _ExamsState extends State<Exams> {
                                       child: Column(
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
-                                          Text(item['type_exam']['name'] ?? '',textAlign:TextAlign.start,style: TextStyle(fontWeight: FontWeight.bold,fontFamily: 'Roboto',fontSize: 15)),
+                                          Text(item['other_exam']['name'] ?? '',textAlign:TextAlign.start,style: TextStyle(fontWeight: FontWeight.bold,fontFamily: 'Roboto',fontSize: 15)),
                                           paddingTop(3),
-                                          Text('CODE : ${format(item['code'])}',textAlign:TextAlign.start,style: TextStyle(fontFamily: 'Roboto')),
-                                          Text(formatDate(DateTime.parse(item['time']),locale),textAlign:TextAlign.start,style: TextStyle(fontFamily: 'Roboto',fontSize: 12)),
+                                          Text(item['description'],textAlign:TextAlign.start,style: TextStyle(fontFamily: 'Roboto',fontSize: 12)),
+                                          Text(translate('register_date', lang)+' : '+formatDate(DateTime.parse(item['time']),locale),textAlign:TextAlign.start,style: TextStyle(fontFamily: 'Roboto',fontSize: 12)),
                                         ],
                                       ),
                                     ),
                                   ),
-                                  item['results']==null ? Text(translate('pending', lang),style: TextStyle(fontSize: 10)) : Text(translate('result', lang),style: TextStyle(fontSize: 10))
                                 ],
                               ),
                             ),

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:app_medcine/dashboard/dashboard.dart';
 import 'package:app_medcine/function/function.dart';
 import 'package:app_medcine/landing.dart';
@@ -28,7 +29,7 @@ class _AppState extends State<App> with TickerProviderStateMixin{
   _start() async {
 
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    
+
     if(prefs.getString('cutomerData')==null){
       _navigatorKey.currentState?.pushReplacement(MaterialPageRoute(builder: (context) => const Landing())); 
     }else{
