@@ -208,7 +208,6 @@ class _SignInState extends State<SignIn> {
                             },
                             selectorConfig: SelectorConfig(
                               selectorType: PhoneInputSelectorType.BOTTOM_SHEET,
-                              useBottomSheetSafeArea: true,
                             ),
                             errorMessage: translate('error_phone', lang),
                             selectorTextStyle: TextStyle(color: Colors.black),

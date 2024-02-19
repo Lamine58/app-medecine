@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:app_medcine/api/api.dart';
+import 'package:app_medcine/exam/archive.dart';
 import 'package:app_medcine/function/function.dart';
 import 'package:app_medcine/function/translate.dart';
 import 'package:bootstrap_icons/bootstrap_icons.dart';
@@ -30,8 +31,9 @@ class _ArchivesState extends State<Archives> {
   int selectedOption = 0;
   var filteredList = [];
   var itemList = [];
+  var exams = [];
+  var exams_id = {};
   // ignore: non_constant_identifier_names
-  dynamic next_page_url;
   TextEditingController searchController = TextEditingController();
   List options = [];
   final ScrollController _scrollController = ScrollController();
@@ -47,12 +49,12 @@ class _ArchivesState extends State<Archives> {
     }
   }
 
+  List<File> additionalImages = [];
+
   @override
   void initState() {
     super.initState();
     init();
-    searchController.addListener(filterItems);
-    _scrollController.addListener(_scrollListener);
     base = api.getbaseUpload();
   }
 
@@ -84,9 +86,16 @@ class _ArchivesState extends State<Archives> {
     try{
       if (response['status'] == 'success') {
         setState(() {
+
           itemList = response['archives'];
           filteredList = itemList;
+
+          for(var item in response['other_exam']){
+            exams.add(item['name']);
+            exams_id[item['name']]=item['id'];
+          }
           load = false;
+
         });
       }
     }catch(err){}
@@ -278,6 +287,30 @@ class _ArchivesState extends State<Archives> {
         ),
       ),
       backgroundColor: primaryColor(),
+      bottomNavigationBar: Container(
+        color: Colors.white,
+        padding: const EdgeInsets.only(top:0,bottom: 20,left: 10,right: 10),
+        child: SizedBox(
+          width: double.infinity, 
+          height: 50,
+          child: ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              elevation: 0,
+              backgroundColor: primaryColor(),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(5),
+              ),
+            ),
+            onPressed: (){
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Archive(exams,exams_id)),
+              );
+            },
+            child: Text(translate('add',lang),style: TextStyle(color: Colors.white,fontFamily: 'Toboggan'),textAlign: TextAlign.center)
+          ),
+        ),
+      ),
       body: 
         Column(
         children: [

@@ -140,7 +140,6 @@ class _LoginState extends State<Login> {
                             },
                             selectorConfig: SelectorConfig(
                               selectorType: PhoneInputSelectorType.BOTTOM_SHEET,
-                              useBottomSheetSafeArea: true,
                             ),
                             ignoreBlank: false,
                             errorMessage: translate('error_phone', lang),

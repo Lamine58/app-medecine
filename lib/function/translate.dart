@@ -165,6 +165,10 @@ This code will be available in your 'My exams' section """,
       "register_date":"Registration date",
       "exam_date":"Exam date",
       "exam":'Exam',
+      "add":'Add',
+      "save":'Save',
+      "exam_date_placeholder":"DD/MM/YYYY",
+      "add_archive":"Add archive"
     };
 
   }else if(lang=='Français'){
@@ -327,6 +331,10 @@ Ce code sera disponible dans votre section 'Mes examens' """,
       "register_date":"Date d'enreistrement",
       "exam_date":"Date de l'examen",
       "exam":'Examen',
+      "add":'Ajouter',
+      "save":'Enregistrer',
+      "exam_date_placeholder":"JJ/MM/AAAA",
+      "add_archive":"Ajoute une archive"
     };
 
   }

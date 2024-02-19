@@ -50,13 +50,14 @@ dependencies:
   pdf: ^3.10.7
   path: ^1.8.3
   document_scanner_flutter: ^0.2.7
-  intl_phone_number_input: ^0.7.4
+  intl_phone_number_input: ^0.7.3
   sms_otp_auto_verify: ^2.1.0
   flutter_phone_direct_caller: ^2.1.1
   url_launcher: ^6.2.4
   location: ^5.0.3
   table_calendar: ^3.0.9
   syncfusion_flutter_pdfviewer: ^24.2.3
+  
 
 
 dev_dependencies:
