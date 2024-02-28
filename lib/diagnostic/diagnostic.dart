@@ -170,7 +170,7 @@ class _DiagnosticState extends State<Diagnostic> {
         );
       },
     );
-  }
+  } 
 
   analyseValue(total,analyses) {
     for (var analysis in analyses) {
