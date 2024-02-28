@@ -186,7 +186,7 @@ class _DiagnosticState extends State<Diagnostic> {
       }
     }
 
-    return null; // Aucune analyse trouvée
+    return null;
   }
 
 
