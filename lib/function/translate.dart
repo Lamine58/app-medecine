@@ -168,7 +168,11 @@ This code will be available in your 'My exams' section """,
       "add":'Add',
       "save":'Save',
       "exam_date_placeholder":"DD/MM/YYYY",
-      "add_archive":"Add archive"
+      "add_archive":"Add archive",
+      "file diagnostic":"Carry out a diagnosis",
+      "file_diagnostic_text":"List of diagnostics available",
+      "empty_diagnostic":"No diagnostics available",
+      "result_diagnostic":"Result"
     };
 
   }else if(lang=='Français'){
@@ -334,7 +338,11 @@ Ce code sera disponible dans votre section 'Mes examens' """,
       "add":'Ajouter',
       "save":'Enregistrer',
       "exam_date_placeholder":"JJ/MM/AAAA",
-      "add_archive":"Ajoute une archive"
+      "add_archive":"Ajoute une archive",
+      "file_diagnostic":"Faire un diagnostique",
+      "file_diagnostic_text":"Liste des diagnostiques disponible",
+      "empty_diagnostic":"Aucun diagnotique disponible",
+      "result_diagnostic":"Resultat"
     };
 
   }

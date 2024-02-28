@@ -45,5 +45,9 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Votre position est requise pour afficher votre position actuelle sur la carte.</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Votre position est requise pour afficher votre position actuelle sur la carte.</string>
 </dict>
 </plist>

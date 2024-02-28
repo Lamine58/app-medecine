@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:app_medcine/api/api.dart';
 import 'package:app_medcine/auth/login.dart';
 import 'package:app_medcine/customer/customer.dart';
+import 'package:app_medcine/diagnostic/diagnostics.dart';
 import 'package:app_medcine/exam/archives.dart';
 import 'package:app_medcine/exam/exam.dart';
 import 'package:app_medcine/exam/exams.dart';
@@ -92,7 +93,7 @@ class _DashboardState extends State<Dashboard> {
         child: Column(
           children: [
             Container(
-              padding: EdgeInsets.only(left:25,right: 25,top: 20,bottom: 20),
+              padding: EdgeInsets.only(left:25,right: 25,top: 5,bottom: 20),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -154,7 +155,7 @@ class _DashboardState extends State<Dashboard> {
                   borderRadius: BorderRadius.only(topLeft:Radius.circular(25),topRight:Radius.circular(25))
                 ),
                child: Container(
-                 padding: EdgeInsets.only(top: 35),
+                 padding: EdgeInsets.only(top: 10),
                  child: SingleChildScrollView(
                    child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -296,6 +297,59 @@ class _DashboardState extends State<Dashboard> {
                                     children: [
                                       Text(translate('archive_exam',lang),style: TextStyle(fontSize: 21)),
                                       Text(translate('archive_text',lang),style: TextStyle(fontSize: 12)),
+                                    ],
+                                  ),
+                                ),
+                                Icon(Icons.chevron_right,color:primaryColor())
+                              ],
+                            ),
+                            decoration: BoxDecoration(
+                              color: const Color.fromARGB(255, 255, 255, 255),
+                              borderRadius: BorderRadius.circular(5),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.withOpacity(0.5),
+                                  spreadRadius: 2,
+                                  blurRadius: 7, 
+                                  offset: Offset(0, 1),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      paddingTop(15),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => Diagnostics()),
+                          );
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.all(0),
+                          child: Container(
+                            padding: EdgeInsets.all(10),
+                            child: Row(
+                              children: [
+                                Container(
+                                  width: 70.0,
+                                  height: 70.0,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(7),
+                                    image: DecorationImage(
+                                      image: AssetImage('assets/images/4263744.webp'),
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                ),
+                                paddingLeft(10),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(translate('file_diagnostic',lang),style: TextStyle(fontSize: 21)),
+                                      Text(translate('file_diagnostic_text',lang),style: TextStyle(fontSize: 12)),
                                     ],
                                   ),
                                 ),

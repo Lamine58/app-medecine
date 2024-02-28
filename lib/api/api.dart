@@ -4,8 +4,8 @@ import 'package:http/http.dart' as http;
 
 class Api {
 
-  static const String baseUrl = 'http://192.168.1.6:8000/api/v1';
-  static const String baseUrlUpload = 'http://192.168.1.6:8000/storage/';
+  static const String baseUrl = 'http://dev.anepam.fr/api/v1';
+  static const String baseUrlUpload = 'http://dev.anepam.fr/storage/';
 
   Future<dynamic> get(String endpoint) async {
     final response = await http.get(Uri.parse('$baseUrl/$endpoint'));
