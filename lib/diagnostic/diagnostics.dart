@@ -1,6 +1,4 @@
 // ignore_for_file: avoid_unnecessary_containers, prefer_const_literals_to_create_immutables, prefer_const_constructors, sort_child_properties_last, non_constant_identifier_names, prefer_typing_uninitialized_variables, use_build_context_synchronously
-import 'dart:convert';
-
 import 'package:app_medcine/api/api.dart';
 import 'package:app_medcine/diagnostic/diagnostic.dart';
 import 'package:app_medcine/function/function.dart';
@@ -9,7 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Diagnostics extends StatefulWidget {
-  const Diagnostics({Key? key}) : super(key: key);
+  final context;
+  const Diagnostics(this.context,{Key? key}) : super(key: key);
 
   @override
   State<Diagnostics> createState() => _DiagnosticsState();
@@ -102,7 +101,7 @@ class _DiagnosticsState extends State<Diagnostics> {
                                 GestureDetector(
                                   onTap: () {
                                     Navigator.push(
-                                      context,
+                                      widget.context,
                                       MaterialPageRoute(builder: (context) => Diagnostic(item)),
                                     );
                                   },
@@ -113,15 +112,7 @@ class _DiagnosticsState extends State<Diagnostics> {
                                       child: Row(
                                         children: [
                                           Container(
-                                            width: 70.0,
                                             height: 70.0,
-                                            decoration: BoxDecoration(
-                                              borderRadius: BorderRadius.circular(7),
-                                              image: DecorationImage(
-                                                image: AssetImage('assets/images/5087559.webp'),
-                                                fit: BoxFit.cover,
-                                              ),
-                                            ),
                                           ),
                                           paddingLeft(10),
                                           Expanded(

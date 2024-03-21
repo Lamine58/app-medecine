@@ -3,10 +3,9 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:app_medcine/api/api.dart';
-import 'package:app_medcine/dashboard/dashboard.dart';
-import 'package:app_medcine/exam/doc-exam.dart';
 import 'package:app_medcine/function/function.dart';
 import 'package:app_medcine/function/translate.dart';
+import 'package:app_medcine/tabs/tabs.dart';
 import 'package:bootstrap_icons/bootstrap_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -106,7 +105,7 @@ class _CustomerState extends State<Customer> {
       context: context,
       isScrollControlled: true,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(15)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(5)),
       ),
       builder: (BuildContext context) {
         return Container(
@@ -235,7 +234,7 @@ class _CustomerState extends State<Customer> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => Dashboard(),
+              builder: (context) => Tabs(context,0),
             ),
           );
           _showResultDialog(response['message']);

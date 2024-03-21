@@ -62,3 +62,8 @@ String formatDate(DateTime dateTime, String locale) {
   initializeDateFormatting();
   return  DateFormat.yMMMMEEEEd(locale).format(dateTime);
 }
+
+String formatDateTime(DateTime dateTime, String locale) {
+  initializeDateFormatting();
+  return  DateFormat.yMMMMEEEEd(locale).add_Hms().format(dateTime);
+}

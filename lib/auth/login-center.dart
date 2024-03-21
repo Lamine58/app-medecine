@@ -2,29 +2,29 @@
 import 'dart:convert';
 
 import 'package:app_medcine/api/api.dart';
-import 'package:app_medcine/auth/otp.dart';
-import 'package:app_medcine/auth/sign-in.dart';
+import 'package:app_medcine/dashboard/dashboard-center.dart';
 import 'package:app_medcine/function/function.dart';
 import 'package:app_medcine/function/translate.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:bootstrap_icons/bootstrap_icons.dart';
 
-class Login extends StatefulWidget {
-  const Login({super.key});
+class LoginCenter extends StatefulWidget {
+  const LoginCenter({super.key});
 
   @override
-  State<Login> createState() => _LoginState();
+  State<LoginCenter> createState() => _LoginCenterState();
 }
 
-class _LoginState extends State<Login> {
+class _LoginCenterState extends State<LoginCenter> {
 
   String lang = 'Français';
   final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  late bool displayPassword = false;
   late bool spinner = false;
   late Api api = Api();
+  late bool show = false;
 
   @override
   void initState() {
@@ -61,13 +61,13 @@ class _LoginState extends State<Login> {
     );
 
     try {
-      var response = await api.post('login',{"email":emailController.text});
-
+      var response = await api.post('login-center',{"email":emailController.text,"password":passwordController.text});
+      print(response);
       if (response['status'] == 'success') {
         final SharedPreferences prefs = await SharedPreferences.getInstance();
-        await prefs.setString('cutomerData', jsonEncode(response));
+        await prefs.setString('userData', jsonEncode(response));
         Navigator.pop(context);
-        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => Otp(emailController.text)),(route)=>false);
+        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => DashboardCenter()),(routes)=>false);
       } else {
         Navigator.pop(context);
         _showResultDialog(response['message']);
@@ -118,7 +118,7 @@ class _LoginState extends State<Login> {
                   alignment: Alignment.centerLeft,
                 ),
                 paddingTop(10),
-                Text(translate('login_text', lang)),
+                Text(translate('center_text', lang)),
                 paddingTop(20),
                 Form(
                   key: _formKey,
@@ -160,6 +160,50 @@ class _LoginState extends State<Login> {
                             return null;
                           },
                         ),
+                        paddingTop(15),
+                        TextFormField(
+                          controller: passwordController,
+                          textInputAction: TextInputAction.next,
+                          obscureText: !show,
+                          style: TextStyle(color: Colors.black,fontWeight: FontWeight.w300),
+                          decoration: InputDecoration(
+                            suffixIcon: GestureDetector(
+                              onTap: () => {
+                                setState(() {
+                                  show = !show;
+                                })
+                              },
+                              child: show==false ? const Icon(BootstrapIcons.eye) : const Icon(BootstrapIcons.eye_slash)
+                            ),
+                            contentPadding: EdgeInsets.only(left:15,top: 15,bottom: 20,right: 15),
+                            labelText: translate('label_password', lang),
+                            labelStyle: TextStyle(color: Color.fromARGB(255, 120, 120, 120),fontWeight: FontWeight.w300),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                            filled: true,
+                            fillColor: Color.fromARGB(255, 204, 204, 204).withOpacity(0.3),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(5),
+                              borderSide: BorderSide(
+                                color: Color.fromARGB(134, 255, 255, 255),
+                              )
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(5),
+                              borderSide: BorderSide(
+                                color: Color.fromARGB(134, 255, 255, 255),
+                              )
+                            ),
+                          ),
+                          keyboardType: TextInputType.name,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return translate('error_password', lang);
+                            }
+                            return null;
+                          },
+                        ),
                         paddingTop(20),
                         ElevatedButton(
                           onPressed: spinner==true ? null : () {
@@ -183,89 +227,6 @@ class _LoginState extends State<Login> {
                               borderRadius: BorderRadius.circular(5),
                             ),
                           ),
-                        ),
-                        paddingTop(10),
-                        SizedBox(
-                          width: double.infinity, 
-                          height: 50,
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Color.fromARGB(91, 0, 166, 255),
-                              elevation: 0,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(5),
-                              ),
-                            ),
-                            onPressed: (){
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => SignIn(),
-                                ),
-                              );
-                            },
-                            child: Text(translate('text_sign',lang),style: TextStyle(color: Color.fromARGB(255, 1, 121, 185),fontFamily: 'Toboggan'),textAlign: TextAlign.center)
-                          ),
-                        ),
-                        paddingTop(20),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: Divider(),
-                            ),
-                            paddingLeft(5),
-                            Text(translate('or', lang)),
-                            paddingLeft(5),
-                            Expanded(
-                              child: Divider(),
-                            )
-                          ],
-                        ),
-                        paddingTop(20),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Container(
-                              height: 50,
-                              width: 50,
-                              child: Icon(BootstrapIcons.facebook,color: Colors.white),
-                              decoration: BoxDecoration(
-                                color: Color(0xff1877F2),
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                            ),
-                            paddingLeft(10),
-                            Container(
-                              height: 50,
-                              width: 50,
-                              child: Icon(BootstrapIcons.twitter_x,color: Colors.white),
-                              decoration: BoxDecoration(
-                                color: Colors.black,
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                            ),
-                            paddingLeft(10),
-                            Container(
-                              height: 50,
-                              width: 50,
-                              child: Icon(BootstrapIcons.google,color: Colors.white),
-                              decoration: BoxDecoration(
-                                color: Color(0xffDD4B39),
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                            ),
-                            paddingLeft(10),
-                            Container(
-                              height: 50,
-                              width: 50,
-                              child: Icon(BootstrapIcons.apple,color: Colors.white),
-                              decoration: BoxDecoration(
-                                color: Colors.black,
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                            ),
-                            paddingLeft(10),
-                          ],
                         )
                       ],
                     ),

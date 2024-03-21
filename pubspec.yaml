@@ -57,6 +57,9 @@ dependencies:
   location: ^5.0.3
   table_calendar: ^3.0.9
   syncfusion_flutter_pdfviewer: ^24.2.3
+  fluentui_system_icons: ^1.1.231
+  font_awesome_flutter: ^10.7.0
+  persistent_bottom_nav_bar: ^5.0.2
   
 
 

@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, sort_child_properties_last, prefer_const_literals_to_create_immutables, unnecessary_new, prefer_typing_uninitialized_variables
+// ignore_for_file: prefer_const_constructors, sort_child_properties_last, prefer_const_literals_to_create_immutables, unnecessary_new, prefer_typing_uninitialized_variables, no_leading_underscores_for_local_identifiers, unused_local_variable, avoid_function_literals_in_foreach_calls
 import 'dart:convert';
 import 'dart:io';
 // import 'dart:js_interop';

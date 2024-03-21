@@ -7,7 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Exam extends StatefulWidget {
-  const Exam({Key? key}) : super(key: key);
+  final context;
+  const Exam(this.context,{Key? key}) : super(key: key);
 
   @override
   State<Exam> createState() => _ExamState();
@@ -69,7 +70,7 @@ class _ExamState extends State<Exam> {
                       GestureDetector(
                         onTap: () {
                           Navigator.push(
-                            context,
+                            widget.context,
                             MaterialPageRoute(builder: (context) => Search('Search')),
                           );
                         },
@@ -95,7 +96,7 @@ class _ExamState extends State<Exam> {
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      Text(translate('have_address', lang),style: TextStyle(fontSize: 21)),
+                                      Text(translate('have_address', lang),style: TextStyle(fontSize: 18)),
                                       Text(translate('have_text', lang),style: TextStyle(fontSize: 12)),
                                     ],
                                   ),
@@ -122,7 +123,7 @@ class _ExamState extends State<Exam> {
                       GestureDetector(
                         onTap: () {
                           Navigator.push(
-                            context,
+                            widget.context,
                             MaterialPageRoute(builder: (context) => Map('Map')),
                           );
                         },
@@ -148,7 +149,7 @@ class _ExamState extends State<Exam> {
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      Text(translate('search_address',lang),style: TextStyle(fontSize: 21)),
+                                      Text(translate('search_address',lang),style: TextStyle(fontSize: 18)),
                                       Text(translate('search_text',lang),style: TextStyle(fontSize: 12)),
                                     ],
                                   ),

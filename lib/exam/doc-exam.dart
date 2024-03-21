@@ -1,11 +1,10 @@
-// ignore_for_file: prefer_const_constructors, sort_child_properties_last, prefer_const_literals_to_create_immutables, unnecessary_new, prefer_typing_uninitialized_variables
+// ignore_for_file: prefer_const_constructors, sort_child_properties_last, prefer_const_literals_to_create_immutables, unnecessary_new, prefer_typing_uninitialized_variables, unused_local_variable, no_leading_underscores_for_local_identifiers, avoid_function_literals_in_foreach_calls
 import 'dart:convert';
 import 'dart:io';
 // import 'dart:js_interop';
 import 'package:app_medcine/api/api.dart';
 import 'package:app_medcine/exam/code.dart';
 import 'package:app_medcine/exam/exam-date.dart';
-import 'package:app_medcine/exam/pay-exam.dart';
 import 'package:app_medcine/function/function.dart';
 import 'package:app_medcine/function/translate.dart';
 import 'package:document_scanner_flutter/configs/configs.dart';

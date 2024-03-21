@@ -49,5 +49,9 @@
 	<string>Votre position est requise pour afficher votre position actuelle sur la carte.</string>
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>Votre position est requise pour afficher votre position actuelle sur la carte.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Votre photothèque sera utilisée pour sélectionner une image pour l'ajout de publication et la modification de votre photo de profil.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Votre photothèque sera utilisée pour sélectionner une image pour l'ajout de publication et la modification de votre photo de profil</string>
 </dict>
 </plist>

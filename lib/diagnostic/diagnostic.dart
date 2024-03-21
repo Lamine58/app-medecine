@@ -1,7 +1,4 @@
 // ignore_for_file: prefer_const_constructors
-
-import 'dart:ffi';
-
 import 'package:app_medcine/function/function.dart';
 import 'package:app_medcine/function/translate.dart';
 import 'package:flutter/material.dart';
@@ -64,7 +61,7 @@ class _DiagnosticState extends State<Diagnostic> {
                     }else{
                       total_point -= int.parse(question['responses'][index]['point']);
                     }
-                    question['responses'][index]['checked'] = value!;
+                    question['responses'][index]['checked'] = value;
                   });
                 },
               );
@@ -76,7 +73,7 @@ class _DiagnosticState extends State<Diagnostic> {
 
   }
 
-  Widget radioQuestion(Map<String, dynamic> question) {
+  Widget radioQuestion(Map<String, dynamic> question,index_question) {
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -102,11 +99,20 @@ class _DiagnosticState extends State<Diagnostic> {
                       groupValue: question['option'],
                       onChanged: (value) {
                         setState(() {
+
                           if(question['option']!=''){
                             total_point -= int.parse(question['option']);
                           }
+                          
                           total_point += int.parse(value);
                           question['option'] = value;
+                          widget.diagnostic['questions'][index_question]['value'] = question['responses'][index]['reponse'];
+
+                          for (int index = index_question+1; index < widget.diagnostic['questions'].length; index++) {
+                              widget.diagnostic['questions'][index]['option'] = '';
+                              widget.diagnostic['questions'][index]['value'] = '';
+                          }
+
                         });
                       },
                     ),
@@ -185,7 +191,6 @@ class _DiagnosticState extends State<Diagnostic> {
         return analysis['analyse'];
       }
     }
-
     return null;
   }
 
@@ -235,8 +240,13 @@ class _DiagnosticState extends State<Diagnostic> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              for(var item in widget.diagnostic['questions'])
-                item['type']=='Question à choix unique' ? radioQuestion(item) : checkboxQuestion(item)
+              for (int index = 0; index < widget.diagnostic['questions'].length; index++)
+                widget.diagnostic['questions'][index]['type']=='Question à choix unique' ? 
+                ( 
+                  (widget.diagnostic['questions'][index]['condition']!='' && widget.diagnostic['questions'][index]['condition_value']!=widget.diagnostic['questions'][int.parse(widget.diagnostic['questions'][index]['condition'])-1]['value']) 
+                  ? SizedBox() : radioQuestion(widget.diagnostic['questions'][index],index)
+                ) :
+                checkboxQuestion(widget.diagnostic['questions'][index])
             ],
           ),
         ),

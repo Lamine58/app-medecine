@@ -4,9 +4,9 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:app_medcine/api/api.dart';
-import 'package:app_medcine/dashboard/dashboard.dart';
 import 'package:app_medcine/function/function.dart';
 import 'package:app_medcine/function/translate.dart';
+import 'package:app_medcine/tabs/tabs.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
@@ -161,7 +161,7 @@ class _ArchiveState extends State<Archive> {
           Navigator.pop(context);
           Navigator.pushAndRemoveUntil(
             context,
-            MaterialPageRoute(builder: (context) => Dashboard()),
+            MaterialPageRoute(builder: (context) => Tabs(context,0)),
             (routes)=>false
           );
           _showResultDialog(response['message'],context);
@@ -368,7 +368,6 @@ class _ArchiveState extends State<Archive> {
                         crossAxisSpacing: 8,
                         mainAxisSpacing: 8,
                         children: additionalImages.asMap().entries.map((entry) {
-                          int index = entry.key;
                           return Stack(
                             children: [
                               extension(entry.value.path)=='.pdf' ?

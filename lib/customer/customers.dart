@@ -1,30 +1,23 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, avoid_unnecessary_containers, deprecated_member_use, depend_on_referenced_packages
 import 'dart:convert';
-import 'dart:io';
-
 import 'package:app_medcine/api/api.dart';
+import 'package:app_medcine/customer/data.dart';
 import 'package:app_medcine/function/function.dart';
 import 'package:app_medcine/function/translate.dart';
 import 'package:bootstrap_icons/bootstrap_icons.dart';
 import 'package:flutter/material.dart';
-import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:printing/printing.dart';
-import 'package:pdf/pdf.dart';
-import 'package:http/http.dart' as http;
-import 'package:path_provider/path_provider.dart';
-import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
 
-class Exams extends StatefulWidget {
+class Customers extends StatefulWidget {
   final context;
-  const Exams(this.context,{Key? key}) : super(key: key);
+  const Customers(this.context,{Key? key}) : super(key: key);
 
   @override
-  State<Exams> createState() => _ExamsState();
+  State<Customers> createState() => _CustomersState();
 }
 
-class _ExamsState extends State<Exams> {
+class _CustomersState extends State<Customers> {
 
   var load = true;
   int selectedOption = 0;
@@ -59,7 +52,7 @@ class _ExamsState extends State<Exams> {
   init() async {
     
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    var data = jsonDecode(prefs.getString('cutomerData')!);
+    var data = jsonDecode(prefs.getString('userData')!);
 
     if(prefs.getString('lang')!=null){
       setState(() {
@@ -73,18 +66,18 @@ class _ExamsState extends State<Exams> {
     }
     
     setState(() {
-      getData(data['customer']['id']);
+      getData(data['user']['id']);
     });
   }
 
   getData(id) async {
     
-    var response = await api.get('exam-customer?id=$id');
+    var response = await api.get('customers?id=$id');
 
     try{
       if (response['status'] == 'success') {
         setState(() {
-          itemList = response['exams'];
+          itemList = response['customers'];
           filteredList = itemList;
           load = false;
         });
@@ -93,156 +86,23 @@ class _ExamsState extends State<Exams> {
 
   }
 
-  _diplayView(item,context){
-
-    return showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(15)),
-      ),
-      builder: (BuildContext context) {
-        return SingleChildScrollView(
-          child: SizedBox(
-            height: MediaQuery.of(context).size.height*0.9,
-            child: Column(
-              children: [
-                paddingTop(10),
-                Center(
-                  child: Container(
-                    height: 5,
-                    width: 50,
-                    decoration: BoxDecoration(
-                      color: primaryColor(),
-                      borderRadius: BorderRadius.circular(10)
-                    ),
-                  ),
-                ),
-                Expanded(
-                  child: Container(
-                    padding: EdgeInsets.only(bottom:20,right: 15,left: 15,top: 10),
-                    child: Column(
-                      children: [
-                        Expanded(
-                          child: SfPdfViewer.network(
-                            base+item['results'][0],
-                          )
-                        ),
-                        paddingTop(20),
-                        SizedBox(
-                          width: double.infinity, 
-                          height: 50,
-                          child: Row(
-                            children: [
-                              Expanded(
-                                child: ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: primaryColor(),
-                                    elevation: 0,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(5),
-                                    ),
-                                  ),
-                                  onPressed: () async {
-                                    _sharePdf(base+item['results'][0],item['type_exam']['name']+' - '+item['code']);
-                                  },
-                                  child: Row(
-                                    children: [
-                                      Expanded(child: Text(translate('share',lang),style: TextStyle(fontSize: 13,color: Colors.white,fontFamily: 'Toboggan'),textAlign: TextAlign.center)),
-                                      paddingLeft(5),
-                                      Icon(Icons.share,color: Colors.white),
-                                    ],
-                                  )
-                                ),
-                              ),
-                              paddingLeft(10),
-                              Expanded(
-                                child: ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: primaryColor(),
-                                    elevation: 0,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(5),
-                                    ),
-                                  ),
-                                  onPressed: (){
-                                    _printPdf(base+item['results'][0]);
-                                  },
-                                  child: Row(
-                                    children: [
-                                      Expanded(child: Text(translate('print',lang),style: TextStyle(fontSize: 13,color: Colors.white,fontFamily: 'Toboggan'),textAlign: TextAlign.center)),
-                                      paddingLeft(5),
-                                      Icon(Icons.print,color: Colors.white),
-                                    ],
-                                  )
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        paddingTop(10),
-                      ],
-                    )
-                  ),
-                )
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  _printPdf(String url) async {
-
-    final String pdfUrl = url;
-
-    final http.Response response = await http.get(Uri.parse(pdfUrl));
-    var bytes = response.bodyBytes;
-
-    final Directory appDocDir = await getApplicationDocumentsDirectory();
-    final String filePath = '${appDocDir.path}/temp_pdf.pdf';
-    File file = File(filePath);
-    await file.writeAsBytes(bytes);
-
-    await Printing.layoutPdf(
-      onLayout: (PdfPageFormat format) async => bytes,
-    );
-  }
-
-  _sharePdf(String url,nameFile) async {
-
-    final String pdfUrl = url;
-
-    final http.Response response = await http.get(Uri.parse(pdfUrl));
-    var bytes = response.bodyBytes;
-
-    final Directory appDocDir = await getApplicationDocumentsDirectory();
-    final String filePath = '${appDocDir.path}/${nameFile}.pdf';
-    File file = File(filePath);
-    await file.writeAsBytes(bytes);
-
-    await Share.shareFiles([file.path], text: nameFile);
-
-  }
-  
   void filterItems() {
     String query = searchController.text.toLowerCase();
     setState(() {
       filteredList = itemList.where((item) =>  
-        item['type_exam']['name'].toString().toLowerCase().contains(query) ||
-        item['code'].toString().toLowerCase().contains(query)
+        item['first_name'].toString().toLowerCase().contains(query) ||
+        item['last_name'].toString().toLowerCase().contains(query)
       ).toList();
     });
   }
 
-  String format(number) {
-    String numberString = number;
-    int length = numberString.length;
-    for (int i = length - 3; i > 0; i -= 3) {
-      numberString = '${numberString.substring(0, i)} ${numberString.substring(i)}';
+
+  avatar(avatar){
+    if(avatar==null || avatar=='') {
+      return AssetImage('assets/images/avatar-2.png');
+    } else {
+      return NetworkImage(base+avatar);
     }
-    return numberString;
   }
 
   @override
@@ -256,7 +116,7 @@ class _ExamsState extends State<Exams> {
         toolbarHeight: 40,
         elevation: 0,
         title: Text(
-          translate('my_exam', lang),
+          translate('users', lang),
           style: TextStyle(
             fontSize: 15,
             fontWeight: FontWeight.w200,
@@ -323,7 +183,7 @@ class _ExamsState extends State<Exams> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Center(
-                    child : Text(translate('empty_exam', lang))
+                    child : Text(translate('empty_users', lang))
                   ),
                 ],
               ),
@@ -365,8 +225,10 @@ class _ExamsState extends State<Exams> {
                           width: double.infinity,
                           child: GestureDetector(
                             onTap: () {
-                              if(item['results']!=null)
-                                _diplayView(item,context);
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => Data(item)),
+                              );
                             },
                             child: Container(
                               padding: EdgeInsets.all(10),
@@ -380,18 +242,30 @@ class _ExamsState extends State<Exams> {
                                 children: [
                                   Expanded(
                                     child: Container(
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                      child: Row(
                                         children: [
-                                          Text(item['type_exam']['name'] ?? '',textAlign:TextAlign.start,style: TextStyle(fontWeight: FontWeight.bold,fontFamily: 'Roboto',fontSize: 15)),
-                                          paddingTop(3),
-                                          Text('CODE : ${format(item['code'])}',textAlign:TextAlign.start,style: TextStyle(fontFamily: 'Roboto')),
-                                          Text(formatDate(DateTime.parse(item['time']),locale),textAlign:TextAlign.start,style: TextStyle(fontFamily: 'Roboto',fontSize: 12)),
+                                          CircleAvatar(
+                                            radius: 30,
+                                            backgroundColor: Colors.white,
+                                            backgroundImage: avatar(item['avatar']),
+                                          ),
+                                          paddingLeft(10),
+                                          Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Text('${item['first_name']} ${item['last_name']}',textAlign:TextAlign.start,style: TextStyle(fontWeight: FontWeight.bold,fontFamily: 'Roboto',fontSize: 15)),
+                                              paddingTop(3),
+                                              Text('${item['phone']}',textAlign:TextAlign.start,style: TextStyle(fontWeight: FontWeight.bold,fontFamily: 'Roboto',fontSize: 11)),
+                                              paddingTop(3),
+                                              Text(translate('registration', lang)+' : ${formatDate(DateTime.parse(item['created_at']),locale)}',textAlign:TextAlign.start,style: TextStyle(fontFamily: 'Roboto',fontSize: 12)),
+                                            ],
+                                          ),
                                         ],
                                       ),
                                     ),
                                   ),
-                                  item['results']==null ? Text(translate('pending', lang),style: TextStyle(fontSize: 10)) : Text(translate('result', lang),style: TextStyle(fontSize: 10))
+                                  paddingLeft(10),
+                                  Icon(Icons.chevron_right,color: primaryColor())
                                 ],
                               ),
                             ),

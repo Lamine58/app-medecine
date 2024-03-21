@@ -1,7 +1,6 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, avoid_unnecessary_containers, deprecated_member_use, depend_on_referenced_packages
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:app_medcine/api/api.dart';
 import 'package:app_medcine/function/function.dart';
 import 'package:app_medcine/function/translate.dart';
@@ -16,15 +15,15 @@ import 'package:path_provider/path_provider.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
 
-class Exams extends StatefulWidget {
+class UserExams extends StatefulWidget {
   final context;
-  const Exams(this.context,{Key? key}) : super(key: key);
+  const UserExams(this.context,{Key? key}) : super(key: key);
 
   @override
-  State<Exams> createState() => _ExamsState();
+  State<UserExams> createState() => _UserExamsState();
 }
 
-class _ExamsState extends State<Exams> {
+class _UserExamsState extends State<UserExams> {
 
   var load = true;
   int selectedOption = 0;
@@ -56,42 +55,6 @@ class _ExamsState extends State<Exams> {
     base = api.getbaseUpload();
   }
 
-  init() async {
-    
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    var data = jsonDecode(prefs.getString('cutomerData')!);
-
-    if(prefs.getString('lang')!=null){
-      setState(() {
-        lang = prefs.getString('lang')!;
-        if(lang =='Français'){
-          locale ='fr_FR';
-        }else{
-          locale ='en_US';
-        }
-      });
-    }
-    
-    setState(() {
-      getData(data['customer']['id']);
-    });
-  }
-
-  getData(id) async {
-    
-    var response = await api.get('exam-customer?id=$id');
-
-    try{
-      if (response['status'] == 'success') {
-        setState(() {
-          itemList = response['exams'];
-          filteredList = itemList;
-          load = false;
-        });
-      }
-    }catch(err){}
-
-  }
 
   _diplayView(item,context){
 
@@ -226,23 +189,62 @@ class _ExamsState extends State<Exams> {
 
   }
   
+
+  init() async {
+    
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    var data = jsonDecode(prefs.getString('userData')!);
+
+    if(prefs.getString('lang')!=null){
+      setState(() {
+        lang = prefs.getString('lang')!;
+        if(lang =='Français'){
+          locale ='fr_FR';
+        }else{
+          locale ='en_US';
+        }
+      });
+    }
+    
+    setState(() {
+      getData(data['user']['id']);
+    });
+  }
+
+  getData(id) async {
+    
+    var response = await api.get('exams?id=$id');
+
+    try{
+      if (response['status'] == 'success') {
+        setState(() {
+          itemList = response['exams'];
+          filteredList = itemList;
+          load = false;
+        });
+      }
+    }catch(err){}
+
+  }
+
   void filterItems() {
     String query = searchController.text.toLowerCase();
     setState(() {
       filteredList = itemList.where((item) =>  
-        item['type_exam']['name'].toString().toLowerCase().contains(query) ||
-        item['code'].toString().toLowerCase().contains(query)
+        item['name'].toString().toLowerCase().contains(query) ||
+        item['description'].toString().toLowerCase().contains(query)
       ).toList();
     });
   }
 
-  String format(number) {
-    String numberString = number;
-    int length = numberString.length;
-    for (int i = length - 3; i > 0; i -= 3) {
-      numberString = '${numberString.substring(0, i)} ${numberString.substring(i)}';
+  
+
+  avatar(avatar){
+    if(avatar==null || avatar=='') {
+      return AssetImage('assets/images/avatar-2.png');
+    } else {
+      return NetworkImage(base+avatar);
     }
-    return numberString;
   }
 
   @override
@@ -256,7 +258,7 @@ class _ExamsState extends State<Exams> {
         toolbarHeight: 40,
         elevation: 0,
         title: Text(
-          translate('my_exam', lang),
+          translate('us_examens', lang),
           style: TextStyle(
             fontSize: 15,
             fontWeight: FontWeight.w200,
@@ -380,18 +382,35 @@ class _ExamsState extends State<Exams> {
                                 children: [
                                   Expanded(
                                     child: Container(
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                      child: Row(
                                         children: [
-                                          Text(item['type_exam']['name'] ?? '',textAlign:TextAlign.start,style: TextStyle(fontWeight: FontWeight.bold,fontFamily: 'Roboto',fontSize: 15)),
-                                          paddingTop(3),
-                                          Text('CODE : ${format(item['code'])}',textAlign:TextAlign.start,style: TextStyle(fontFamily: 'Roboto')),
-                                          Text(formatDate(DateTime.parse(item['time']),locale),textAlign:TextAlign.start,style: TextStyle(fontFamily: 'Roboto',fontSize: 12)),
+                                          CircleAvatar(
+                                            radius: 40,
+                                            backgroundColor: Colors.white,
+                                            backgroundImage: avatar(item['customer']['avatar']),
+                                          ),
+                                          paddingLeft(10),
+                                          Expanded(
+                                            child: Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                Text('${item['type_exam']['name']}',textAlign:TextAlign.start,style: TextStyle(fontWeight: FontWeight.bold,fontFamily: 'Roboto',fontSize: 14)),
+                                                paddingTop(3),
+                                                Text('${item['customer']['first_name']} ${item['customer']['last_name']}',textAlign:TextAlign.start,style: TextStyle(fontWeight: FontWeight.bold,fontFamily: 'Roboto',fontSize: 13)),
+                                                paddingTop(3),
+                                                Text('Code : ${item['code']}',textAlign:TextAlign.start,style: TextStyle(fontWeight: FontWeight.bold,fontFamily: 'Roboto',fontSize: 14)),
+                                                paddingTop(3),
+                                                paddingTop(3),
+                                                Text(formatDate(DateTime.parse(item['created_at']),locale),textAlign:TextAlign.start,style: TextStyle(fontFamily: 'Roboto',fontSize: 12)),
+                                              ],
+                                            ),
+                                          ),
+                                          paddingLeft(10),
+                                          item['results']==null ? Text(translate('pending', lang),style: TextStyle(fontSize: 10)) : Text(translate('result', lang),style: TextStyle(fontSize: 10))
                                         ],
                                       ),
                                     ),
                                   ),
-                                  item['results']==null ? Text(translate('pending', lang),style: TextStyle(fontSize: 10)) : Text(translate('result', lang),style: TextStyle(fontSize: 10))
                                 ],
                               ),
                             ),

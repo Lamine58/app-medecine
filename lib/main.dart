@@ -1,8 +1,10 @@
+// ignore_for_file: non_constant_identifier_names, unused_field
+
 import 'dart:async';
-import 'dart:convert';
-import 'package:app_medcine/dashboard/dashboard.dart';
+import 'package:app_medcine/dashboard/dashboard-center.dart';
 import 'package:app_medcine/function/function.dart';
 import 'package:app_medcine/landing.dart';
+import 'package:app_medcine/tabs/tabs.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -30,10 +32,12 @@ class _AppState extends State<App> with TickerProviderStateMixin{
 
     final SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    if(prefs.getString('cutomerData')==null){
-      _navigatorKey.currentState?.pushReplacement(MaterialPageRoute(builder: (context) => const Landing())); 
+    if(prefs.getString('cutomerData')!=null){
+      _navigatorKey.currentState?.pushReplacement(MaterialPageRoute(builder: (context) => Tabs(context,0)));
+    }else if(prefs.getString('userData')!=null){
+      _navigatorKey.currentState?.pushReplacement(MaterialPageRoute(builder: (context) => const DashboardCenter())); 
     }else{
-      _navigatorKey.currentState?.pushReplacement(MaterialPageRoute(builder: (context) => const Dashboard()));
+      _navigatorKey.currentState?.pushReplacement(MaterialPageRoute(builder: (context) => const Landing())); 
     }
   }
 

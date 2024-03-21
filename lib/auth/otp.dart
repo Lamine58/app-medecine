@@ -1,19 +1,16 @@
 // ignore_for_file: prefer_const_constructors, sized_box_for_whitespace, sort_child_properties_last, use_build_context_synchronously
-
-import 'dart:async';
 import 'dart:convert';
-
 import 'package:app_medcine/api/api.dart';
-import 'package:app_medcine/dashboard/dashboard.dart';
 import 'package:app_medcine/function/function.dart';
 import 'package:app_medcine/function/translate.dart';
+import 'package:app_medcine/tabs/tabs.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sms_otp_auto_verify/sms_otp_auto_verify.dart';
 
 class Otp extends StatefulWidget {
-  final phone;
-  const Otp(this.phone,{super.key});
+  final email;
+  const Otp(this.email,{super.key});
 
   @override
   State<Otp> createState() => _OtpState();
@@ -25,7 +22,7 @@ class _OtpState extends State<Otp> {
   int _otpCodeLength = 4;
   bool _isLoadingButton = false;
   bool _enableButton = false;
-  String _otpCode = "1234";
+  String _otpCode = "";
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   final intRegex = RegExp(r'\d+', multiLine: true);
   TextEditingController textEditingController = new TextEditingController();
@@ -91,12 +88,12 @@ class _OtpState extends State<Otp> {
     
     try {
 
-      var response = await api.post('verify-code', {"phone":widget.phone,'hash':textEditingController.text});
+      var response = await api.post('verify-code', {"email":widget.email,'hash':textEditingController.text});
 
       if(response['status'] == 'success'){
         final SharedPreferences prefs = await SharedPreferences.getInstance();
         await prefs.setString('cutomerData', jsonEncode(response));
-        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => Dashboard()),(routes)=>false);
+        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => Tabs(context,0)),(routes)=>false);
       }else{
         setState(() {
           _isLoadingButton = false;
@@ -158,7 +155,7 @@ class _OtpState extends State<Otp> {
 
     try {
 
-      var response = await api.post('send-code', {"phone":widget.phone});
+      var response = await api.post('send-code', {"email":widget.email});
       Navigator.pop(context);
       _showResultDialog(response['message']);
 

@@ -2,13 +2,12 @@
 import 'dart:convert';
 
 import 'package:app_medcine/api/api.dart';
-import 'package:app_medcine/customer/customer.dart';
-import 'package:app_medcine/customer/history-data.dart';
+import 'package:app_medcine/customer/customers.dart';
 import 'package:app_medcine/diagnostic/diagnostics.dart';
 import 'package:app_medcine/exam/archives.dart';
 import 'package:app_medcine/exam/exam.dart';
 import 'package:app_medcine/exam/exams.dart';
-import 'package:app_medcine/exam/search.dart';
+import 'package:app_medcine/exam/user-exams.dart';
 import 'package:app_medcine/function/function.dart';
 import 'package:app_medcine/function/translate.dart';
 import 'package:app_medcine/landing.dart';
@@ -16,24 +15,21 @@ import 'package:bootstrap_icons/bootstrap_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class Dashboard extends StatefulWidget {
-  final context;
-  const Dashboard(this.context,{Key? key}) : super(key: key);
+class DashboardCenter extends StatefulWidget {
+  const DashboardCenter({Key? key}) : super(key: key);
 
   @override
-  State<Dashboard> createState() => _DashboardState();
+  State<DashboardCenter> createState() => _DashboardCenterState();
 }
 
-class _DashboardState extends State<Dashboard> {
+class _DashboardCenterState extends State<DashboardCenter> {
 
   String lang = 'Français';
-  var app_name = 'ANEPAM';
   var last_name = '';
   var base = '';
   var phone = '';
   var id = '';
   var avatar;
-  var customer;
   late Api api = Api();
 
   @override
@@ -46,8 +42,7 @@ class _DashboardState extends State<Dashboard> {
   init() async {
 
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    var data = jsonDecode(prefs.getString('cutomerData')!);
-    customer = data;
+    var data = jsonDecode(prefs.getString('userData')!);
 
     if(prefs.getString('lang')!=null){
       setState(() {
@@ -55,35 +50,28 @@ class _DashboardState extends State<Dashboard> {
       });
     }
     setState(() {
-      last_name = data['customer']['first_name']+' '+data['customer']['last_name'];
-      avatar = data['customer']['avatar'];
-      id = data['customer']['id'];
-      phone = data['customer']['phone'];
+      last_name = data['user']['first_name']+' '+data['user']['last_name'];
+      avatar = data['user']['avatar'];
+      id = data['user']['id'];
+      phone = data['user']['phone'];
     });
 
-    refresh(data,prefs);
   }
   
-  refresh(data,prefs) async {
-    
-    var response = await api.post('user', {"id":data['customer']['id']});
-
-    try{
-      if (response['status'] == 'success') {
-        data = response;
-        await prefs.setString('cutomerData', jsonEncode(response));
-        setState(() {
-          last_name = data['customer']['first_name']+' '+data['customer']['last_name'];
-          avatar = data['customer']['avatar'];
-          phone = data['customer']['phone'];
-        });
-      }
-    }catch(err){}
-
-  }
-
   networkImage(){
     return Image.network(base+avatar,fit: BoxFit.cover);
+  }
+
+  void _showResultDialog(String result) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(5))),
+        title: Text('Message',style: TextStyle(fontSize: 20),),
+        content: Text(result,style: TextStyle(fontWeight: FontWeight.w300)),
+      ),
+    );
   }
 
   @override
@@ -122,9 +110,9 @@ class _DashboardState extends State<Dashboard> {
                   child: GestureDetector(
                     onTap: () async {
                       final SharedPreferences prefs = await SharedPreferences.getInstance();
-                      prefs.remove('cutomerData');
+                      prefs.remove('userData');
                       Navigator.pushAndRemoveUntil(
-                        widget.context,
+                        context,
                         MaterialPageRoute(builder: (context) => Landing()),
                         (routes)=>false
                       );
@@ -146,10 +134,7 @@ class _DashboardState extends State<Dashboard> {
                       width: MediaQuery.sizeOf(context).width,
                       child: GestureDetector(
                         onTap: (){
-                          Navigator.push(
-                            widget.context,
-                            MaterialPageRoute(builder: (context) => Customer(null)),
-                          );
+                          _showResultDialog('Module en développement');
                         },
                         child: SizedBox(
                           child: CircleAvatar(
@@ -209,27 +194,10 @@ class _DashboardState extends State<Dashboard> {
                                     child: Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
-                                        Text(translate('calendar_exam', lang),style: TextStyle(color: Colors.white,fontWeight: FontWeight.w100)),
+                                        Text(translate('title_center', lang),style: TextStyle(color: Colors.white,fontWeight: FontWeight.w100,fontSize: 15)),
                                         paddingTop(7),
-                                        Text(translate('calendar_exam_text', lang),style: TextStyle(color: Colors.white,fontWeight: FontWeight.w100,fontSize: 10)),
+                                        Text(translate('label_text', lang),style: TextStyle(color: Colors.white,fontWeight: FontWeight.w100,fontSize: 11.5)),
                                         paddingTop(10),
-                                        GestureDetector(
-                                          onTap: () {
-                                            Navigator.push(
-                                              widget.context,
-                                              MaterialPageRoute(builder: (context) => Search('Search')),
-                                            );
-                                          },
-                                          child: Container(
-                                            decoration: BoxDecoration(
-                                              color: Colors.white,
-                                              borderRadius: BorderRadius.circular(5)
-                                            ),
-                                            width: 100,
-                                            height: 30,
-                                            child: Center(child: Text(translate('consult', lang),style: TextStyle(fontSize: 10),))
-                                          ),
-                                        )
                                       ],
                                     ),
                                   )
@@ -251,8 +219,8 @@ class _DashboardState extends State<Dashboard> {
                                 child: GestureDetector(
                                   onTap: () {
                                     Navigator.push(
-                                      widget.context,
-                                      MaterialPageRoute(builder: (context) => Exams(context)),
+                                      context,
+                                      MaterialPageRoute(builder: (context) => Customers(context)),
                                     );
                                   },
                                   child: Padding(
@@ -267,7 +235,7 @@ class _DashboardState extends State<Dashboard> {
                                             decoration: BoxDecoration(
                                               borderRadius: BorderRadius.circular(7),
                                               image: DecorationImage(
-                                                image: AssetImage('assets/images/8724468.webp'),
+                                                image: AssetImage('assets/images/3268085.webp'),
                                                 fit: BoxFit.cover,
                                               ),
                                             ),
@@ -275,7 +243,7 @@ class _DashboardState extends State<Dashboard> {
                                           Column(
                                             crossAxisAlignment: CrossAxisAlignment.start,
                                             children: [
-                                              Text(translate('my_exam',lang),style: TextStyle(fontSize: 11)),
+                                              Text(translate('users',lang),style: TextStyle(fontSize: 11)),
                                             ],
                                           ),
                                         ],
@@ -300,10 +268,7 @@ class _DashboardState extends State<Dashboard> {
                               Expanded(
                                 child: GestureDetector(
                                   onTap: () {
-                                    Navigator.push(
-                                      widget.context,
-                                      MaterialPageRoute(builder: (context) => HistoryData(customer['customer'])),
-                                    );
+                                    _showResultDialog('Module en développement');
                                   },
                                   child: Padding(
                                     padding: const EdgeInsets.all(0),
@@ -317,7 +282,7 @@ class _DashboardState extends State<Dashboard> {
                                             decoration: BoxDecoration(
                                               borderRadius: BorderRadius.circular(7),
                                               image: DecorationImage(
-                                                image: AssetImage('assets/images/3626665.webp'),
+                                                image: AssetImage('assets/images/6578837.webp'),
                                                 fit: BoxFit.cover,
                                               ),
                                             ),
@@ -325,7 +290,7 @@ class _DashboardState extends State<Dashboard> {
                                           Column(
                                             crossAxisAlignment: CrossAxisAlignment.start,
                                             children: [
-                                              Text(translate('mesure',lang),style: TextStyle(fontSize: 11)),
+                                              Text(translate('agenda',lang),style: TextStyle(fontSize: 11)),
                                             ],
                                           ),
                                         ],
@@ -355,8 +320,8 @@ class _DashboardState extends State<Dashboard> {
                                 child: GestureDetector(
                                   onTap: () {
                                     Navigator.push(
-                                      widget.context,
-                                      MaterialPageRoute(builder: (context) => Archives(null,context)),
+                                      context,
+                                      MaterialPageRoute(builder: (context) => UserExams(context)),
                                     );
                                   },
                                   child: Padding(
@@ -371,7 +336,7 @@ class _DashboardState extends State<Dashboard> {
                                             decoration: BoxDecoration(
                                               borderRadius: BorderRadius.circular(7),
                                               image: DecorationImage(
-                                                image: AssetImage('assets/images/7097722.webp'),
+                                                image: AssetImage('assets/images/8724468.webp'),
                                                 fit: BoxFit.cover,
                                               ),
                                             ),
@@ -379,7 +344,7 @@ class _DashboardState extends State<Dashboard> {
                                           Column(
                                             crossAxisAlignment: CrossAxisAlignment.start,
                                             children: [
-                                              Text(translate('archive_exam',lang),style: TextStyle(fontSize: 11)),
+                                              Text(translate('us_examens',lang),style: TextStyle(fontSize: 11)),
                                             ],
                                           ),
                                         ],
@@ -404,10 +369,7 @@ class _DashboardState extends State<Dashboard> {
                               Expanded(
                                 child: GestureDetector(
                                   onTap: () {
-                                    Navigator.push(
-                                      widget.context,
-                                      MaterialPageRoute(builder: (context) => Diagnostics(context)),
-                                    );
+                                    _showResultDialog('Module en développement');
                                   },
                                   child: Padding(
                                     padding: const EdgeInsets.all(0),
@@ -421,7 +383,7 @@ class _DashboardState extends State<Dashboard> {
                                             decoration: BoxDecoration(
                                               borderRadius: BorderRadius.circular(7),
                                               image: DecorationImage(
-                                                image: AssetImage('assets/images/4263744.webp'),
+                                                image: AssetImage('assets/images/4741086.webp'),
                                                 fit: BoxFit.cover,
                                               ),
                                             ),
@@ -429,7 +391,7 @@ class _DashboardState extends State<Dashboard> {
                                           Column(
                                             crossAxisAlignment: CrossAxisAlignment.start,
                                             children: [
-                                              Text(translate('file_diagnostic',lang),style: TextStyle(fontSize: 11)),
+                                              Text(translate('profil',lang),style: TextStyle(fontSize: 11)),
                                             ],
                                           ),
                                         ],

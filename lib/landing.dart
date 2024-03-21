@@ -1,6 +1,6 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, depend_on_referenced_packages
+import 'package:app_medcine/auth/login-center.dart';
 import 'package:app_medcine/auth/login.dart';
-import 'package:app_medcine/auth/sign-in.dart';
 import 'package:app_medcine/function/function.dart';
 import 'package:app_medcine/function/translate.dart';
 import 'package:flutter/material.dart';
@@ -99,11 +99,11 @@ class _LandingState extends State<Landing> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => SignIn(),
+                        builder: (context) => Login(),
                       ),
                     );
                   },
-                  child: Text(translate('text_sign',lang),style: TextStyle(color: Color.fromARGB(255, 1, 121, 185),fontFamily: 'Toboggan'),textAlign: TextAlign.center)
+                  child: Text(translate('text_user',lang),style: TextStyle(color: Color.fromARGB(255, 1, 121, 185),fontFamily: 'Toboggan',fontSize: 12),textAlign: TextAlign.center)
                 ),
               ),
             ),
@@ -124,11 +124,11 @@ class _LandingState extends State<Landing> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => Login(),
+                        builder: (context) => LoginCenter(),
                       ),
                     );
                   },
-                  child: Text(translate('text_login',lang),style: TextStyle(color: Colors.white,fontFamily: 'Toboggan'),textAlign: TextAlign.center)
+                  child: Text(translate('text_center',lang),style: TextStyle(color: Colors.white,fontFamily: 'Toboggan',fontSize: 12),textAlign: TextAlign.center)
                 ),
               ),
             )

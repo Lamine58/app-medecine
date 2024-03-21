@@ -63,11 +63,11 @@ class _SignInState extends State<SignIn> {
     );
 
     try {
-      var response = await api.post('sign-in', {"first_name":firstNamelController.text,"last_name":lastNameontroller.text,"phone":phoneController.text});
+      var response = await api.post('sign-in', {"first_name":firstNamelController.text,"last_name":lastNameontroller.text,"phone":phoneController.text,"email":emailController.text});
 
       if (response['status'] == 'success') {
         Navigator.pop(context);
-        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => Otp(phoneController.text)),(route)=>false);
+        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => Otp(emailController.text)),(route)=>false);
       } else {
         Navigator.pop(context);
         _showResultDialog(response['message']);
@@ -189,6 +189,41 @@ class _SignInState extends State<SignIn> {
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return translate('error_last_name', lang);
+                            }
+                            return null;
+                          },
+                        ),
+                        paddingTop(15),
+                        TextFormField(
+                          controller: emailController,
+                          textInputAction: TextInputAction.next,
+                          style: TextStyle(color: Colors.black,fontWeight: FontWeight.w300),
+                          decoration: InputDecoration(
+                            contentPadding: EdgeInsets.only(left:15,top: 15,bottom: 20,right: 15),
+                            labelText: translate('label_email', lang),
+                            labelStyle: TextStyle(color: Color.fromARGB(255, 120, 120, 120),fontWeight: FontWeight.w300),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                            filled: true,
+                            fillColor: Color.fromARGB(255, 204, 204, 204).withOpacity(0.3),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(5),
+                              borderSide: BorderSide(
+                                color: Color.fromARGB(134, 255, 255, 255),
+                              )
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(5),
+                              borderSide: BorderSide(
+                                color: Color.fromARGB(134, 255, 255, 255),
+                              )
+                            ),
+                          ),
+                          keyboardType: TextInputType.emailAddress,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return translate('error_email', lang);
                             }
                             return null;
                           },

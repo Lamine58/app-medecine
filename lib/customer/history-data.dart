@@ -1,5 +1,4 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, avoid_unnecessary_containers, deprecated_member_use, depend_on_referenced_packages
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:app_medcine/api/api.dart';
@@ -9,29 +8,28 @@ import 'package:bootstrap_icons/bootstrap_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:printing/printing.dart';
-import 'package:pdf/pdf.dart';
-import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
-import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
+import 'package:pdf/widgets.dart' as pw;
+import 'dart:typed_data';
+import 'package:flutter/services.dart';
 
-
-class Exams extends StatefulWidget {
-  final context;
-  const Exams(this.context,{Key? key}) : super(key: key);
+class HistoryData extends StatefulWidget {
+  final dynamic customer;
+  const HistoryData(this.customer,{Key? key}) : super(key: key);
 
   @override
-  State<Exams> createState() => _ExamsState();
+  State<HistoryData> createState() => _HistoryDataState();
 }
 
-class _ExamsState extends State<Exams> {
+class _HistoryDataState extends State<HistoryData> {
 
   var load = true;
   int selectedOption = 0;
   var filteredList = [];
   var itemList = [];
+  var exams = [];
+  var exams_id = {};
   // ignore: non_constant_identifier_names
-  dynamic next_page_url;
   TextEditingController searchController = TextEditingController();
   List options = [];
   final ScrollController _scrollController = ScrollController();
@@ -47,19 +45,18 @@ class _ExamsState extends State<Exams> {
     }
   }
 
+  List<File> additionalImages = [];
+
   @override
   void initState() {
     super.initState();
     init();
-    searchController.addListener(filterItems);
-    _scrollController.addListener(_scrollListener);
     base = api.getbaseUpload();
   }
 
   init() async {
     
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    var data = jsonDecode(prefs.getString('cutomerData')!);
 
     if(prefs.getString('lang')!=null){
       setState(() {
@@ -73,165 +70,94 @@ class _ExamsState extends State<Exams> {
     }
     
     setState(() {
-      getData(data['customer']['id']);
+      getData(widget.customer['id']);
     });
   }
 
   getData(id) async {
     
-    var response = await api.get('exam-customer?id=$id');
+    var response = await api.get('measure-customer?id=$id');
 
     try{
       if (response['status'] == 'success') {
         setState(() {
-          itemList = response['exams'];
+
+          itemList = response['measures'];
           filteredList = itemList;
           load = false;
+
         });
       }
     }catch(err){}
 
   }
 
-  _diplayView(item,context){
+  Future<void> _generateAndSharePDF(item,BuildContext context) async {
 
-    return showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(15)),
-      ),
-      builder: (BuildContext context) {
-        return SingleChildScrollView(
-          child: SizedBox(
-            height: MediaQuery.of(context).size.height*0.9,
-            child: Column(
+    final ByteData data = await rootBundle.load('assets/images/logo-marvel-blue.png');
+    final Uint8List bytes = data.buffer.asUint8List();
+
+    final pdf = pw.Document();
+    pdf.addPage(
+      pw.Page(
+        build: (pw.Context context) {
+          return pw.Column(
+              crossAxisAlignment: pw.CrossAxisAlignment.start,
               children: [
-                paddingTop(10),
-                Center(
-                  child: Container(
-                    height: 5,
-                    width: 50,
-                    decoration: BoxDecoration(
-                      color: primaryColor(),
-                      borderRadius: BorderRadius.circular(10)
-                    ),
+                pw.Container(
+                  alignment: pw.Alignment.centerLeft,
+                  child: pw.Image(
+                    pw.MemoryImage(bytes),
+                    width: 170,
+                    height: 170,
                   ),
                 ),
-                Expanded(
-                  child: Container(
-                    padding: EdgeInsets.only(bottom:20,right: 15,left: 15,top: 10),
-                    child: Column(
-                      children: [
-                        Expanded(
-                          child: SfPdfViewer.network(
-                            base+item['results'][0],
-                          )
-                        ),
-                        paddingTop(20),
-                        SizedBox(
-                          width: double.infinity, 
-                          height: 50,
-                          child: Row(
-                            children: [
-                              Expanded(
-                                child: ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: primaryColor(),
-                                    elevation: 0,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(5),
-                                    ),
-                                  ),
-                                  onPressed: () async {
-                                    _sharePdf(base+item['results'][0],item['type_exam']['name']+' - '+item['code']);
-                                  },
-                                  child: Row(
-                                    children: [
-                                      Expanded(child: Text(translate('share',lang),style: TextStyle(fontSize: 13,color: Colors.white,fontFamily: 'Toboggan'),textAlign: TextAlign.center)),
-                                      paddingLeft(5),
-                                      Icon(Icons.share,color: Colors.white),
-                                    ],
-                                  )
-                                ),
-                              ),
-                              paddingLeft(10),
-                              Expanded(
-                                child: ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: primaryColor(),
-                                    elevation: 0,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(5),
-                                    ),
-                                  ),
-                                  onPressed: (){
-                                    _printPdf(base+item['results'][0]);
-                                  },
-                                  child: Row(
-                                    children: [
-                                      Expanded(child: Text(translate('print',lang),style: TextStyle(fontSize: 13,color: Colors.white,fontFamily: 'Toboggan'),textAlign: TextAlign.center)),
-                                      paddingLeft(5),
-                                      Icon(Icons.print,color: Colors.white),
-                                    ],
-                                  )
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        paddingTop(10),
-                      ],
-                    )
-                  ),
-                )
+                pw.SizedBox(height: 50), 
+                pw.Text('${translate('tension', lang)} : ${item['systolic_bp']}',textAlign:pw.TextAlign.start,style: pw.TextStyle(fontWeight: pw.FontWeight.bold,fontSize: 18)),
+                pw.SizedBox(height: 10),
+                pw.Divider(),
+                pw.SizedBox(height: 5),
+                pw.Text('${translate('tension_art', lang)} : ${item['diastolic_bp']}',textAlign:pw.TextAlign.start,style: pw.TextStyle(fontWeight: pw.FontWeight.bold,fontSize: 18)),
+                pw.SizedBox(height: 10),
+                pw.Divider(),
+                pw.SizedBox(height: 5),
+                pw.Text('${translate('oxygen', lang)} : ${item['oxygen_saturation']}',textAlign:pw.TextAlign.start,style: pw.TextStyle(fontWeight: pw.FontWeight.bold,fontSize: 18)),
+                pw.SizedBox(height: 10),
+                pw.Divider(),
+                pw.SizedBox(height: 5),
+                pw.Text('${translate('frequence', lang)} : ${item['heart_rate']}',textAlign:pw.TextAlign.start,style: pw.TextStyle(fontWeight: pw.FontWeight.bold,fontSize: 18)),
+                pw.SizedBox(height: 10),
+                pw.Divider(),
+                pw.SizedBox(height: 5),
+                pw.Text('${translate('rythme', lang)} : ${item['heart_rhythm']}',textAlign:pw.TextAlign.start,style: pw.TextStyle(fontWeight: pw.FontWeight.bold,fontSize: 18)),
+                pw.SizedBox(height: 10),
+                pw.Divider(),
+                pw.SizedBox(height: 5),
+                pw.Text('${item['user']['first_name']} ${item['user']['last_name']} - ${item['business']['legal_name']}',textAlign:pw.TextAlign.start,style: pw.TextStyle(fontWeight: pw.FontWeight.bold,fontSize: 18)),
+                pw.SizedBox(height: 10),
+                pw.Divider(),
+                pw.SizedBox(height: 5),
+                pw.SizedBox(height: 50),
+                pw.Text('Date : ${formatDateTime(DateTime.parse(item['time']),locale)}',textAlign:pw.TextAlign.start,style: pw.TextStyle(fontSize: 15)),
               ],
-            ),
-          ),
-        );
-      },
+          );
+        },
+      ),
     );
-  }
 
-  _printPdf(String url) async {
+    final tempDir = await getTemporaryDirectory();
+    final tempFilePath = '${tempDir.path}/releve-de-mesure.pdf';
+    final File file = File(tempFilePath);
+    await file.writeAsBytes(await pdf.save());
 
-    final String pdfUrl = url;
-
-    final http.Response response = await http.get(Uri.parse(pdfUrl));
-    var bytes = response.bodyBytes;
-
-    final Directory appDocDir = await getApplicationDocumentsDirectory();
-    final String filePath = '${appDocDir.path}/temp_pdf.pdf';
-    File file = File(filePath);
-    await file.writeAsBytes(bytes);
-
-    await Printing.layoutPdf(
-      onLayout: (PdfPageFormat format) async => bytes,
-    );
-  }
-
-  _sharePdf(String url,nameFile) async {
-
-    final String pdfUrl = url;
-
-    final http.Response response = await http.get(Uri.parse(pdfUrl));
-    var bytes = response.bodyBytes;
-
-    final Directory appDocDir = await getApplicationDocumentsDirectory();
-    final String filePath = '${appDocDir.path}/${nameFile}.pdf';
-    File file = File(filePath);
-    await file.writeAsBytes(bytes);
-
-    await Share.shareFiles([file.path], text: nameFile);
-
+    Share.shareFiles([tempFilePath], text: 'Relevé du ${formatDate(DateTime.parse(item['time']),locale)}');
   }
   
   void filterItems() {
     String query = searchController.text.toLowerCase();
     setState(() {
       filteredList = itemList.where((item) =>  
-        item['type_exam']['name'].toString().toLowerCase().contains(query) ||
-        item['code'].toString().toLowerCase().contains(query)
+        item['heart_rhythm'].toString().toLowerCase().contains(query)
       ).toList();
     });
   }
@@ -256,7 +182,7 @@ class _ExamsState extends State<Exams> {
         toolbarHeight: 40,
         elevation: 0,
         title: Text(
-          translate('my_exam', lang),
+          translate('history_mesure', lang),
           style: TextStyle(
             fontSize: 15,
             fontWeight: FontWeight.w200,
@@ -323,7 +249,7 @@ class _ExamsState extends State<Exams> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Center(
-                    child : Text(translate('empty_exam', lang))
+                    child : Text(translate('empty_archive', lang))
                   ),
                 ],
               ),
@@ -365,8 +291,8 @@ class _ExamsState extends State<Exams> {
                           width: double.infinity,
                           child: GestureDetector(
                             onTap: () {
-                              if(item['results']!=null)
-                                _diplayView(item,context);
+                              // if(item['file']!=null)
+                              //   _diplayView(item,context);
                             },
                             child: Container(
                               padding: EdgeInsets.all(10),
@@ -383,15 +309,44 @@ class _ExamsState extends State<Exams> {
                                       child: Column(
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
-                                          Text(item['type_exam']['name'] ?? '',textAlign:TextAlign.start,style: TextStyle(fontWeight: FontWeight.bold,fontFamily: 'Roboto',fontSize: 15)),
+                                          Text('${translate('tension', lang)} : ${item['systolic_bp']}',textAlign:TextAlign.start,style: TextStyle(fontWeight: FontWeight.bold,fontFamily: 'Roboto',fontSize: 13)),
                                           paddingTop(3),
-                                          Text('CODE : ${format(item['code'])}',textAlign:TextAlign.start,style: TextStyle(fontFamily: 'Roboto')),
-                                          Text(formatDate(DateTime.parse(item['time']),locale),textAlign:TextAlign.start,style: TextStyle(fontFamily: 'Roboto',fontSize: 12)),
+                                          Text('${translate('tension_art', lang)} : ${item['diastolic_bp']}',textAlign:TextAlign.start,style: TextStyle(fontWeight: FontWeight.bold,fontFamily: 'Roboto',fontSize: 13)),
+                                          paddingTop(3),
+                                          Text('${translate('oxygen', lang)} : ${item['oxygen_saturation']}',textAlign:TextAlign.start,style: TextStyle(fontWeight: FontWeight.bold,fontFamily: 'Roboto',fontSize: 13)),
+                                          paddingTop(3),
+                                          Text('${translate('frequence', lang)} : ${item['heart_rate']}',textAlign:TextAlign.start,style: TextStyle(fontWeight: FontWeight.bold,fontFamily: 'Roboto',fontSize: 13)),
+                                          paddingTop(3),
+                                          Text('${translate('rythme', lang)} : ${item['heart_rhythm']}',textAlign:TextAlign.start,style: TextStyle(fontWeight: FontWeight.bold,fontFamily: 'Roboto',fontSize: 13)),
+                                          paddingTop(3),
+                                          Text('${item['user']['first_name']} ${item['user']['last_name']} - ${item['business']['legal_name']}',textAlign:TextAlign.start,style: TextStyle(fontWeight: FontWeight.bold,fontFamily: 'Roboto',fontSize: 13)),
+                                          paddingTop(3),
+                                          Text('Date : ${formatDateTime(DateTime.parse(item['time']),locale)}',textAlign:TextAlign.start,style: TextStyle(fontFamily: 'Roboto',fontSize: 12)),
+                                          paddingTop(10),
+                                          GestureDetector(
+                                            onTap: (){
+                                              _generateAndSharePDF(item,context);
+                                            },
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                color: primaryColor(),
+                                                borderRadius: BorderRadius.circular(5)
+                                              ),
+                                              width: 100,
+                                              height: 30,
+                                              child: Row(
+                                                children: [
+                                                  Expanded(child: Center(child: Text(translate('share', lang),style: TextStyle(fontSize: 10,color: Colors.white)))),
+                                                  Icon(Icons.share,color: Colors.white,size: 14),
+                                                  paddingLeft(10),
+                                                ],
+                                              )
+                                            ),
+                                          ),
                                         ],
                                       ),
                                     ),
                                   ),
-                                  item['results']==null ? Text(translate('pending', lang),style: TextStyle(fontSize: 10)) : Text(translate('result', lang),style: TextStyle(fontSize: 10))
                                 ],
                               ),
                             ),

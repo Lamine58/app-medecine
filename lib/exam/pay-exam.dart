@@ -19,7 +19,6 @@ class _PayExamState extends State<PayExam> {
   final TextEditingController cityController = TextEditingController();
   final TextEditingController zipCodeController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   late bool displayPassword = false;
   late bool spinner = false;
 

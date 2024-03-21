@@ -1,9 +1,8 @@
 // ignore_for_file: prefer_const_constructors, sort_child_properties_last, prefer_const_literals_to_create_immutables, unnecessary_new
-import 'package:app_medcine/dashboard/dashboard.dart';
 import 'package:app_medcine/function/function.dart';
 import 'package:app_medcine/function/translate.dart';
+import 'package:app_medcine/tabs/tabs.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Code extends StatefulWidget {
@@ -73,7 +72,7 @@ class _CodeState extends State<Code> {
               Navigator.pushAndRemoveUntil(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => Dashboard(),
+                  builder: (context) => Tabs(context,0),
                 ),
                 (route)=>false
               );

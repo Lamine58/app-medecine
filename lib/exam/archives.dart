@@ -19,7 +19,8 @@ import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
 class Archives extends StatefulWidget {
   final dynamic item;
-  const Archives(this.item,{Key? key}) : super(key: key);
+  final context;
+  const Archives(this.item,this.context,{Key? key}) : super(key: key);
 
   @override
   State<Archives> createState() => _ArchivesState();
@@ -114,7 +115,7 @@ class _ArchivesState extends State<Archives> {
       builder: (BuildContext context) {
         return SingleChildScrollView(
           child: SizedBox(
-            height: MediaQuery.of(context).size.height*0.9,
+            height: MediaQuery.of(context).size.height*0.8,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -289,7 +290,7 @@ class _ArchivesState extends State<Archives> {
       backgroundColor: primaryColor(),
       bottomNavigationBar: Container(
         color: Colors.white,
-        padding: const EdgeInsets.only(top:0,bottom: 20,left: 10,right: 10),
+        padding: const EdgeInsets.only(top:0,bottom: 10,left: 10,right: 10),
         child: SizedBox(
           width: double.infinity, 
           height: 50,
@@ -303,7 +304,7 @@ class _ArchivesState extends State<Archives> {
             ),
             onPressed: (){
               Navigator.push(
-                context,
+                widget.context,
                 MaterialPageRoute(builder: (context) => Archive(exams,exams_id)),
               );
             },
