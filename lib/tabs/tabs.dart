@@ -43,7 +43,6 @@ class _TabsState extends State<Tabs> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     init();
   }
