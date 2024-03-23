@@ -4,6 +4,10 @@ import 'package:http/http.dart' as http;
 
 class Api {
 
+  // static const String baseUrl = 'http://localhost:8000/api/v1';
+  // static const String baseUrlUpload = 'http://localhost:8000/storage/';
+  // static const String baseUrl = 'http://192.168.137.128:8000/api/v1';
+  // static const String baseUrlUpload = 'http://192.168.137.128:8000/storage/';
   static const String baseUrl = 'http://dev.anepam.fr/api/v1';
   static const String baseUrlUpload = 'http://dev.anepam.fr/storage/';
 
@@ -83,6 +87,9 @@ class Api {
         body: json.encode(data),
         headers: {'Content-Type': 'application/json'},
       );
+      
+      print(data);
+
       if (response.statusCode == 200) {
         final jsonResponse = json.decode(response.body);
         return jsonResponse;

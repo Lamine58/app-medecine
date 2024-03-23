@@ -236,7 +236,8 @@ class _SignInState extends State<SignIn> {
                             borderRadius: BorderRadius.circular(5)
                           ),
                           child: InternationalPhoneNumberInput(
-                            initialValue: PhoneNumber(isoCode: 'CI'),
+                            countries: ['FR', 'CG', 'MA', 'DZ', 'TN', 'CI', 'US', 'CA', 'IL'],
+                            initialValue: PhoneNumber(isoCode: 'FR'),
                             hintText: translate('label_phone', lang),
                             onInputChanged: (PhoneNumber number) {
                               phoneController.text = number.phoneNumber!;

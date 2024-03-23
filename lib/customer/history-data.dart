@@ -6,11 +6,11 @@ import 'package:app_medcine/function/function.dart';
 import 'package:app_medcine/function/translate.dart';
 import 'package:bootstrap_icons/bootstrap_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:printing/printing.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pdf/widgets.dart' as pw;
-import 'dart:typed_data';
 import 'package:flutter/services.dart';
 
 class HistoryData extends StatefulWidget {
@@ -171,6 +171,68 @@ class _HistoryDataState extends State<HistoryData> {
     return numberString;
   }
 
+  Future<void> _generateAndPrintPDF(item, BuildContext context) async {
+  
+    final ByteData data = await rootBundle.load('assets/images/logo-marvel-blue.png');
+    final Uint8List bytes = data.buffer.asUint8List();
+
+    final pdf = pw.Document();
+    pdf.addPage(
+      pw.Page(
+        build: (pw.Context context) {
+          return pw.Column(
+            crossAxisAlignment: pw.CrossAxisAlignment.start,
+            children: [
+              pw.Container(
+                alignment: pw.Alignment.centerLeft,
+                child: pw.Image(
+                  pw.MemoryImage(bytes),
+                  width: 170,
+                  height: 170,
+                ),
+              ),
+              pw.SizedBox(height: 50),
+              pw.Text('${translate('tension', lang)} : ${item['systolic_bp']}', textAlign: pw.TextAlign.start, style: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 18)),
+              pw.SizedBox(height: 10),
+              pw.Divider(),
+              pw.SizedBox(height: 5),
+              pw.Text('${translate('tension_art', lang)} : ${item['diastolic_bp']}', textAlign: pw.TextAlign.start, style: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 18)),
+              pw.SizedBox(height: 10),
+              pw.Divider(),
+              pw.SizedBox(height: 5),
+              pw.Text('${translate('oxygen', lang)} : ${item['oxygen_saturation']}', textAlign: pw.TextAlign.start, style: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 18)),
+              pw.SizedBox(height: 10),
+              pw.Divider(),
+              pw.SizedBox(height: 5),
+              pw.Text('${translate('frequence', lang)} : ${item['heart_rate']}', textAlign: pw.TextAlign.start, style: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 18)),
+              pw.SizedBox(height: 10),
+              pw.Divider(),
+              pw.SizedBox(height: 5),
+              pw.Text('${translate('rythme', lang)} : ${item['heart_rhythm']}', textAlign: pw.TextAlign.start, style: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 18)),
+              pw.SizedBox(height: 10),
+              pw.Divider(),
+              pw.SizedBox(height: 5),
+              pw.Text('${item['user']['first_name']} ${item['user']['last_name']} - ${item['business']['legal_name']}', textAlign: pw.TextAlign.start, style: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 18)),
+              pw.SizedBox(height: 10),
+              pw.Divider(),
+              pw.SizedBox(height: 5),
+              pw.SizedBox(height: 50),
+              pw.Text('Date : ${formatDateTime(DateTime.parse(item['time']), locale)}', textAlign: pw.TextAlign.start, style: pw.TextStyle(fontSize: 15)),
+            ],
+          );
+        },
+      ),
+    );
+
+    final tempDir = await getTemporaryDirectory();
+    final tempFilePath = '${tempDir.path}/releve-de-mesure.pdf';
+    final File file = File(tempFilePath);
+    await file.writeAsBytes(await pdf.save());
+
+    await Printing.layoutPdf(onLayout: (_) => pdf.save());
+
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -249,7 +311,7 @@ class _HistoryDataState extends State<HistoryData> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Center(
-                    child : Text(translate('empty_archive', lang))
+                    child : Text(translate('empty_mesure', lang))
                   ),
                 ],
               ),
@@ -309,6 +371,8 @@ class _HistoryDataState extends State<HistoryData> {
                                       child: Column(
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
+                                          Text('Date : ${formatDateTime(DateTime.parse(item['time']),locale)}',textAlign:TextAlign.start,style: TextStyle(fontFamily: 'Roboto',fontSize: 12)),
+                                          Divider(),
                                           Text('${translate('tension', lang)} : ${item['systolic_bp']}',textAlign:TextAlign.start,style: TextStyle(fontWeight: FontWeight.bold,fontFamily: 'Roboto',fontSize: 13)),
                                           paddingTop(3),
                                           Text('${translate('tension_art', lang)} : ${item['diastolic_bp']}',textAlign:TextAlign.start,style: TextStyle(fontWeight: FontWeight.bold,fontFamily: 'Roboto',fontSize: 13)),
@@ -320,29 +384,52 @@ class _HistoryDataState extends State<HistoryData> {
                                           Text('${translate('rythme', lang)} : ${item['heart_rhythm']}',textAlign:TextAlign.start,style: TextStyle(fontWeight: FontWeight.bold,fontFamily: 'Roboto',fontSize: 13)),
                                           paddingTop(3),
                                           Text('${item['user']['first_name']} ${item['user']['last_name']} - ${item['business']['legal_name']}',textAlign:TextAlign.start,style: TextStyle(fontWeight: FontWeight.bold,fontFamily: 'Roboto',fontSize: 13)),
-                                          paddingTop(3),
-                                          Text('Date : ${formatDateTime(DateTime.parse(item['time']),locale)}',textAlign:TextAlign.start,style: TextStyle(fontFamily: 'Roboto',fontSize: 12)),
                                           paddingTop(10),
-                                          GestureDetector(
-                                            onTap: (){
-                                              _generateAndSharePDF(item,context);
-                                            },
-                                            child: Container(
-                                              decoration: BoxDecoration(
-                                                color: primaryColor(),
-                                                borderRadius: BorderRadius.circular(5)
+                                          Row(
+                                            children: [
+                                              GestureDetector(
+                                                onTap: (){
+                                                  _generateAndSharePDF(item,context);
+                                                },
+                                                child: Container(
+                                                  decoration: BoxDecoration(
+                                                    color: primaryColor(),
+                                                    borderRadius: BorderRadius.circular(5)
+                                                  ),
+                                                  width: 100,
+                                                  height: 30,
+                                                  child: Row(
+                                                    children: [
+                                                      Expanded(child: Center(child: Text(translate('share', lang),style: TextStyle(fontSize: 10,color: Colors.white)))),
+                                                      Icon(Icons.share,color: Colors.white,size: 14),
+                                                      paddingLeft(10),
+                                                    ],
+                                                  )
+                                                ),
                                               ),
-                                              width: 100,
-                                              height: 30,
-                                              child: Row(
-                                                children: [
-                                                  Expanded(child: Center(child: Text(translate('share', lang),style: TextStyle(fontSize: 10,color: Colors.white)))),
-                                                  Icon(Icons.share,color: Colors.white,size: 14),
-                                                  paddingLeft(10),
-                                                ],
-                                              )
-                                            ),
-                                          ),
+                                              paddingLeft(10),
+                                              GestureDetector(
+                                                onTap: (){
+                                                  _generateAndPrintPDF(item,context);
+                                                },
+                                                child: Container(
+                                                  decoration: BoxDecoration(
+                                                    color: primaryColor(),
+                                                    borderRadius: BorderRadius.circular(5)
+                                                  ),
+                                                  width: 100,
+                                                  height: 30,
+                                                  child: Row(
+                                                    children: [
+                                                      Expanded(child: Center(child: Text(translate('print', lang),style: TextStyle(fontSize: 10,color: Colors.white)))),
+                                                      Icon(Icons.print,color: Colors.white,size: 14),
+                                                      paddingLeft(10),
+                                                    ],
+                                                  )
+                                                ),
+                                              ),
+                                            ],
+                                          )
                                         ],
                                       ),
                                     ),

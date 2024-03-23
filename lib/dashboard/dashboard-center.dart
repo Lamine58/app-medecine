@@ -2,11 +2,8 @@
 import 'dart:convert';
 
 import 'package:app_medcine/api/api.dart';
+import 'package:app_medcine/customer/add-customer.dart';
 import 'package:app_medcine/customer/customers.dart';
-import 'package:app_medcine/diagnostic/diagnostics.dart';
-import 'package:app_medcine/exam/archives.dart';
-import 'package:app_medcine/exam/exam.dart';
-import 'package:app_medcine/exam/exams.dart';
 import 'package:app_medcine/exam/user-exams.dart';
 import 'package:app_medcine/function/function.dart';
 import 'package:app_medcine/function/translate.dart';
@@ -268,7 +265,10 @@ class _DashboardCenterState extends State<DashboardCenter> {
                               Expanded(
                                 child: GestureDetector(
                                   onTap: () {
-                                    _showResultDialog('Module en développement');
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(builder: (context) => AddCustomer()),
+                                    );
                                   },
                                   child: Padding(
                                     padding: const EdgeInsets.all(0),
@@ -282,7 +282,7 @@ class _DashboardCenterState extends State<DashboardCenter> {
                                             decoration: BoxDecoration(
                                               borderRadius: BorderRadius.circular(7),
                                               image: DecorationImage(
-                                                image: AssetImage('assets/images/6578837.webp'),
+                                                image: AssetImage('assets/images/6148916.webp'),
                                                 fit: BoxFit.cover,
                                               ),
                                             ),
@@ -290,7 +290,7 @@ class _DashboardCenterState extends State<DashboardCenter> {
                                           Column(
                                             crossAxisAlignment: CrossAxisAlignment.start,
                                             children: [
-                                              Text(translate('agenda',lang),style: TextStyle(fontSize: 11)),
+                                              Text(translate('add_patient',lang),style: TextStyle(fontSize: 11)),
                                             ],
                                           ),
                                         ],

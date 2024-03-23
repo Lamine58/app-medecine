@@ -1,8 +1,15 @@
 // ignore_for_file: prefer_const_constructors
+import 'dart:io';
+
 import 'package:app_medcine/function/function.dart';
 import 'package:app_medcine/function/translate.dart';
 import 'package:flutter/material.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:pdf/widgets.dart' as pw;
+import 'package:flutter/services.dart';
+
 
 class Diagnostic extends StatefulWidget {
   final diagnostic;
@@ -126,6 +133,66 @@ class _DiagnosticState extends State<Diagnostic> {
   }
 
 
+  Future<void> _generateAndSharePDF(BuildContext context) async {
+
+    final ByteData data = await rootBundle.load('assets/images/logo-marvel-blue.png');
+    final Uint8List bytes = data.buffer.asUint8List();
+
+    final pdf = pw.Document();
+    pdf.addPage(
+      pw.Page(
+        build: (pw.Context context) {
+          return pw.Column(
+              crossAxisAlignment: pw.CrossAxisAlignment.start,
+              children: [
+                pw.Container(
+                  alignment: pw.Alignment.centerLeft,
+                  child: pw.Image(
+                    pw.MemoryImage(bytes),
+                    width: 150,
+                    height: 150,
+                  ),
+                ),
+                pw.SizedBox(height: 30),
+                for (int index = 0; index < widget.diagnostic['questions'].length; index++)
+                  (widget.diagnostic['questions'][index]['condition']!='' && widget.diagnostic['questions'][index]['condition_value']!=widget.diagnostic['questions'][int.parse(widget.diagnostic['questions'][index]['condition'])-1]['value']) 
+                  ? pw.SizedBox() : pw.Column(
+                      crossAxisAlignment: pw.CrossAxisAlignment.start,
+                      children: [
+                        pw.Text(
+                          widget.diagnostic['questions'][index]['question'],
+                          style: pw.TextStyle(fontSize: 14, fontWeight: pw.FontWeight.bold),
+                        ),
+                        pw.SizedBox(height:10),
+                        pw.Padding(
+                          padding: const pw.EdgeInsets.only(bottom: 5),
+                          child: pw.Column(
+                            crossAxisAlignment: pw.CrossAxisAlignment.start,
+                            children: [
+                              pw.Text(widget.diagnostic['questions'][index]['value'])
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                pw.SizedBox(height: 10),
+                pw.Text('Conseil',style: pw.TextStyle(decoration: pw.TextDecoration.underline,fontSize: 14)),
+                pw.SizedBox(height: 10),
+                pw.Text(analyseValue(total_point,widget.diagnostic['analyses'])  ?? '' ,style: pw.TextStyle(fontSize: 15,fontWeight: pw.FontWeight.bold))
+              ],
+          );
+        },
+      ),
+    );
+
+    final tempDir = await getTemporaryDirectory();
+    final tempFilePath = '${tempDir.path}/resultat.pdf';
+    final File file = File(tempFilePath);
+    await file.writeAsBytes(await pdf.save());
+
+    // ignore: deprecated_member_use
+    Share.shareFiles([tempFilePath]);
+  }
   
   _diplayView(context){
 
@@ -229,7 +296,7 @@ class _DiagnosticState extends State<Diagnostic> {
               ),
             ),
             onPressed: (){
-              _diplayView(context);
+              _generateAndSharePDF(context);
             },
             child: Text(translate('result_diagnostic',lang),style: TextStyle(color: Colors.white,fontFamily: 'Toboggan'),textAlign: TextAlign.center)
           ),
@@ -238,7 +305,7 @@ class _DiagnosticState extends State<Diagnostic> {
       body: Padding(
         padding: EdgeInsets.all(15),
         child: SingleChildScrollView(
-          child: Column(
+          child: (widget.diagnostic['questions']==null || widget.diagnostic['questions'].length==0) ? Center(child: Text("Auncune donnée pour l'instant")) : Column(
             children: [
               for (int index = 0; index < widget.diagnostic['questions'].length; index++)
                 widget.diagnostic['questions'][index]['type']=='Question à choix unique' ? 

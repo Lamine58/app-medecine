@@ -2,6 +2,7 @@
 import 'package:app_medcine/api/api.dart';
 import 'package:app_medcine/customer/history-data.dart';
 import 'package:app_medcine/customer/save-data.dart';
+import 'package:app_medcine/customer/update-customer.dart';
 import 'package:app_medcine/function/function.dart';
 import 'package:app_medcine/function/translate.dart';
 import 'package:flutter/material.dart';
@@ -231,6 +232,62 @@ class _DataState extends State<Data> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(translate('history_mesure',lang),style: TextStyle(fontSize: 11)),
+                                  ],
+                                ),
+                              ],
+                            ),
+                            decoration: BoxDecoration(
+                              color: const Color.fromARGB(255, 255, 255, 255),
+                              borderRadius: BorderRadius.circular(5),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.withOpacity(0.5),
+                                  spreadRadius: 2,
+                                  blurRadius: 7, 
+                                  offset: Offset(0, 1),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                paddingTop(15),
+                Row(
+                  children: [
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => UpdateCustomer(widget.customer),
+                            ),
+                          );
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.all(0),
+                          child: Container(
+                            padding: EdgeInsets.all(10),
+                            child: Column(
+                              children: [
+                                Container(
+                                  width: 70.0,
+                                  height: 70.0,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(7),
+                                    image: DecorationImage(
+                                      image: AssetImage('assets/images/7017789.webp'),
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(translate('personal_data',lang),style: TextStyle(fontSize: 11)),
                                   ],
                                 ),
                               ],
