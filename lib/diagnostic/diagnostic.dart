@@ -305,7 +305,7 @@ class _DiagnosticState extends State<Diagnostic> {
       body: Padding(
         padding: EdgeInsets.all(15),
         child: SingleChildScrollView(
-          child: (widget.diagnostic['questions']==null || widget.diagnostic['questions'].length==0) ? Center(child: Text("Auncune donnée pour l'instant")) : Column(
+          child: (widget.diagnostic['questions']==null || widget.diagnostic['questions'].length==0) ? Center(child: Text(translate('empty_data', lang))) : Column(
             children: [
               for (int index = 0; index < widget.diagnostic['questions'].length; index++)
                 widget.diagnostic['questions'][index]['type']=='Question à choix unique' ? 

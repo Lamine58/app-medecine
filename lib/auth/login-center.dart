@@ -112,13 +112,14 @@ class _LoginCenterState extends State<LoginCenter> {
           ),
             padding: EdgeInsets.all(20),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Align(
                   child: logo_blue(200),
                   alignment: Alignment.centerLeft,
                 ),
                 paddingTop(10),
-                Text(translate('center_text', lang)),
+                Text(translate('center_text', lang),textAlign: TextAlign.start,),
                 paddingTop(20),
                 Form(
                   key: _formKey,

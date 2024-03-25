@@ -60,6 +60,8 @@ dependencies:
   fluentui_system_icons: ^1.1.231
   font_awesome_flutter: ^10.7.0
   persistent_bottom_nav_bar: ^5.0.2
+  flutter_localizations:
+    sdk: flutter
   
 
 

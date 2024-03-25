@@ -8,6 +8,7 @@ import 'package:app_medcine/exam/user-exams.dart';
 import 'package:app_medcine/function/function.dart';
 import 'package:app_medcine/function/translate.dart';
 import 'package:app_medcine/landing.dart';
+import 'package:app_medcine/user/user.dart';
 import 'package:bootstrap_icons/bootstrap_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -131,7 +132,10 @@ class _DashboardCenterState extends State<DashboardCenter> {
                       width: MediaQuery.sizeOf(context).width,
                       child: GestureDetector(
                         onTap: (){
-                          _showResultDialog('Module en développement');
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => User()),
+                          );
                         },
                         child: SizedBox(
                           child: CircleAvatar(
@@ -369,7 +373,10 @@ class _DashboardCenterState extends State<DashboardCenter> {
                               Expanded(
                                 child: GestureDetector(
                                   onTap: () {
-                                    _showResultDialog('Module en développement');
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(builder: (context) => User()),
+                                    );
                                   },
                                   child: Padding(
                                     padding: const EdgeInsets.all(0),

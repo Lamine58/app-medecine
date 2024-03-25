@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, avoid_unnecessary_containers, deprecated_member_use, depend_on_referenced_packages
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, avoid_unnecessary_containers, deprecated_member_use, depend_on_referenced_packages, sort_child_properties_last, use_build_context_synchronously
 import 'dart:io';
 
 import 'package:app_medcine/api/api.dart';
@@ -6,6 +6,7 @@ import 'package:app_medcine/function/function.dart';
 import 'package:app_medcine/function/translate.dart';
 import 'package:bootstrap_icons/bootstrap_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:printing/printing.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -36,8 +37,11 @@ class _HistoryDataState extends State<HistoryData> {
   late Api api = Api();
 
   String lang = 'Français';
-  String locale = 'fr_FR';
+  String locale = 'fr';
   String base = '';
+
+  var _startDate;
+  var _endDate;
 
   void _scrollListener() {
     if (_scrollController.position.pixels ==
@@ -62,9 +66,9 @@ class _HistoryDataState extends State<HistoryData> {
       setState(() {
         lang = prefs.getString('lang')!;
         if(lang =='Français'){
-          locale ='fr_FR';
+          locale ='fr';
         }else{
-          locale ='en_US';
+          locale ='en';
         }
       });
     }
@@ -89,6 +93,35 @@ class _HistoryDataState extends State<HistoryData> {
         });
       }
     }catch(err){}
+
+  }
+
+  getDataBydate(id) async {
+
+    setState(() {
+      load = true;
+    });
+
+    String formattedStartDate = DateFormat('yyyy-MM-dd').format(_startDate);
+    String formattedEndDate = DateFormat('yyyy-MM-dd').format(_endDate);
+
+    print('measure-customer?id=$id&start=$formattedStartDate&end=$formattedEndDate');
+
+    var response = await api.get('measure-customer?id=$id&start=$formattedStartDate&end=$formattedEndDate');
+
+    try{
+      if (response['status'] == 'success') {
+        setState(() {
+
+          itemList = response['measures'];
+          filteredList = itemList;
+          load = false;
+
+        });
+      }
+    }catch(err){
+      print(err);
+    }
 
   }
 
@@ -133,7 +166,7 @@ class _HistoryDataState extends State<HistoryData> {
                 pw.SizedBox(height: 10),
                 pw.Divider(),
                 pw.SizedBox(height: 5),
-                pw.Text('${item['user']['first_name']} ${item['user']['last_name']} - ${item['business']['legal_name']}',textAlign:pw.TextAlign.start,style: pw.TextStyle(fontWeight: pw.FontWeight.bold,fontSize: 18)),
+                pw.Text('${item['user']['first_name']} ${item['user']['last_name']} - ${item['business']['legal_name'] ?? 'ADMIN'}',textAlign:pw.TextAlign.start,style: pw.TextStyle(fontWeight: pw.FontWeight.bold,fontSize: 18)),
                 pw.SizedBox(height: 10),
                 pw.Divider(),
                 pw.SizedBox(height: 5),
@@ -212,7 +245,7 @@ class _HistoryDataState extends State<HistoryData> {
               pw.SizedBox(height: 10),
               pw.Divider(),
               pw.SizedBox(height: 5),
-              pw.Text('${item['user']['first_name']} ${item['user']['last_name']} - ${item['business']['legal_name']}', textAlign: pw.TextAlign.start, style: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 18)),
+              pw.Text('${item['user']['first_name']} ${item['user']['last_name']} - ${item['business']['legal_name'] ?? 'ADMIN'}', textAlign: pw.TextAlign.start, style: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 18)),
               pw.SizedBox(height: 10),
               pw.Divider(),
               pw.SizedBox(height: 5),
@@ -231,6 +264,35 @@ class _HistoryDataState extends State<HistoryData> {
 
     await Printing.layoutPdf(onLayout: (_) => pdf.save());
 
+  }
+
+  Future<void> _selectDateRange() async {
+
+    final DateTime? pickedStartDate = await showDatePicker(
+      context: context,
+      initialDate: _startDate ?? DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2101),
+      locale: Locale(locale),
+    );
+
+    if (pickedStartDate != null) {
+      final DateTime? pickedEndDate = await showDatePicker(
+        context: context,
+        initialDate: _endDate ?? pickedStartDate,
+        firstDate: pickedStartDate,
+        lastDate: DateTime(2101),
+        locale: Locale(locale),
+      );
+
+      if (pickedEndDate != null) {
+        setState(() {
+          _startDate = pickedStartDate;
+          _endDate = pickedEndDate;
+          getDataBydate(widget.customer['id']);
+        });
+      }
+    }
   }
 
   @override
@@ -292,6 +354,24 @@ class _HistoryDataState extends State<HistoryData> {
                           ),
                           suffixIcon: Icon(BootstrapIcons.search,color: const Color.fromARGB(77, 255, 255, 255),)
                         ),
+                    ),
+                  ),
+                ),
+                paddingLeft(10),
+                SizedBox(
+                  height: 50,
+                  width: 50,
+                  child: ElevatedButton(
+                    onPressed: () async {
+                      _selectDateRange();
+                    },
+                    child: Icon(Icons.menu,color: primaryColor()),
+                    style: ElevatedButton.styleFrom(
+                      padding: EdgeInsets.zero,
+                      backgroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5),
+                      ),
                     ),
                   ),
                 )
@@ -383,7 +463,7 @@ class _HistoryDataState extends State<HistoryData> {
                                           paddingTop(3),
                                           Text('${translate('rythme', lang)} : ${item['heart_rhythm']}',textAlign:TextAlign.start,style: TextStyle(fontWeight: FontWeight.bold,fontFamily: 'Roboto',fontSize: 13)),
                                           paddingTop(3),
-                                          Text('${item['user']['first_name']} ${item['user']['last_name']} - ${item['business']['legal_name']}',textAlign:TextAlign.start,style: TextStyle(fontWeight: FontWeight.bold,fontFamily: 'Roboto',fontSize: 13)),
+                                          Text('${item['user']['first_name']} ${item['user']['last_name']} - ${item['business']['legal_name'] ?? 'ADMIN'}',textAlign:TextAlign.start,style: TextStyle(fontWeight: FontWeight.bold,fontFamily: 'Roboto',fontSize: 13)),
                                           paddingTop(10),
                                           Row(
                                             children: [

@@ -16,8 +16,9 @@ translate(name,lang){
       "title_center":"Exam center area",
       "users":"Patients",
       "agenda":"Agenda",
+      "us_examens":"Us exams",
       "us_examinations":"Our exams",
-      "profile":"Profile",
+      "profil":"Profile",
       "label_text":"Explore our space dedicated to exam centers",
       "consult":"Consult",
       "text_user":"Patient",
@@ -35,6 +36,7 @@ translate(name,lang){
       "error_password": "Please enter your password",
       "label_email": "Email",
       "label_password": "Password",
+      "label_new_password": "New password",
       "submit_login": "Login",
       "label_first_name": "First name",
       "error_first_name": "Please enter your name",
@@ -188,7 +190,7 @@ This code will be available in your 'My exams' section """,
       "save":'Save',
       "exam_date_placeholder":"DD/MM/YYYY",
       "add_archive":"Add archive",
-      "file diagnostic":"Carry out a diagnosis",
+      "file_diagnostic":"Carry out a diagnosis",
       "file_diagnostic_text":"List of diagnostics available",
       "empty_diagnostic":"No diagnostics available",
       "empty_users":"No patients available",
@@ -199,7 +201,9 @@ This code will be available in your 'My exams' section """,
       "oxygen":"Oxygemetry",
       "frequence":"Heart rate",
       "rythme":"Heart rate",
-      "rythme_label": ['Regular', 'Irregular']
+      "rythme_label": ['Regular', 'Irregular'],
+      "empty_data":"No data yet",
+      "geolocalisation": "Localisation",
     };
 
   }else if(lang=='Français'){
@@ -384,6 +388,7 @@ Ce code sera disponible dans votre section 'Mes examens' """,
       "users":"Patients",
       "agenda":"Agenda",
       "us_examens":"Nos examens",
+      "label_new_password": "Nouveau mot de passe",
       "profil":"Profil",
       "registration":"Inscription",
       "user":"Patient",
@@ -395,7 +400,8 @@ Ce code sera disponible dans votre section 'Mes examens' """,
       "frequence":"Fréquence cardiaque",
       "rythme":"Rythme cardiaque",
       "rythme_label": ['Régulier', 'Irrégulier'],
-      "add_patient":'Nouveau patient'
+      "add_patient":'Nouveau patient',
+      "empty_data":"Auncune donnée pour l'instant"
     };
 
   }

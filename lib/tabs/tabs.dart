@@ -59,7 +59,6 @@ class _TabsState extends State<Tabs> {
         Dashboard(context),
         Exam(context),
         Archives(null,context),
-        Diagnostics(context),
       ];
     }
     List<PersistentBottomNavBarItem> _navBarsItems() {
@@ -91,15 +90,6 @@ class _TabsState extends State<Tabs> {
                 inactiveColorPrimary: Color.fromARGB(101, 255, 255, 255),
                 iconSize: iconSize
             ),
-            PersistentBottomNavBarItem(
-                // icon: const Icon(FluentIcons.person_48_filled),
-                icon: Image.asset('assets/images/4263744.webp'),
-                title: translate("diagnostics",lang),
-                textStyle: TextStyle(fontSize: 10),
-                activeColorPrimary: Colors.white,
-                inactiveColorPrimary: Color.fromARGB(101, 255, 255, 255),
-                iconSize: iconSize,
-            )
         ];
     }
 

@@ -290,7 +290,7 @@ class _ArchivesState extends State<Archives> {
       backgroundColor: primaryColor(),
       bottomNavigationBar: Container(
         color: Colors.white,
-        padding: const EdgeInsets.only(top:0,bottom: 10,left: 10,right: 10),
+        padding: const EdgeInsets.only(top:0,bottom: 20,left: 10,right: 10),
         child: SizedBox(
           width: double.infinity, 
           height: 50,

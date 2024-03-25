@@ -112,13 +112,14 @@ class _LoginState extends State<Login> {
           ),
             padding: EdgeInsets.all(20),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Align(
                   child: logo_blue(200),
                   alignment: Alignment.centerLeft,
                 ),
                 paddingTop(10),
-                Text(translate('login_text', lang)),
+                Text(translate('login_text', lang),textAlign: TextAlign.start,),
                 paddingTop(20),
                 Form(
                   key: _formKey,

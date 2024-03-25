@@ -108,13 +108,14 @@ class _SignInState extends State<SignIn> {
           child: Container(
             padding: EdgeInsets.all(20),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Align(
                   child: logo_blue(200),
                   alignment: Alignment.centerLeft,
                 ),
                 paddingTop(10),
-                Text(translate('login_text', lang)),
+                Text(translate('login_text', lang),textAlign: TextAlign.start,),
                 paddingTop(20),
                 Form(
                   key: _formKey,
@@ -149,7 +150,7 @@ class _SignInState extends State<SignIn> {
                               )
                             ),
                           ),
-                          keyboardType: TextInputType.name,
+                          keyboardType: TextInputType.text,
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return translate('error_first_name', lang);
@@ -185,7 +186,7 @@ class _SignInState extends State<SignIn> {
                               )
                             ),
                           ),
-                          keyboardType: TextInputType.name,
+                          keyboardType: TextInputType.text,
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return translate('error_last_name', lang);

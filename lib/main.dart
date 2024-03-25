@@ -7,6 +7,7 @@ import 'package:app_medcine/landing.dart';
 import 'package:app_medcine/tabs/tabs.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 void main() {
   runApp(const App());
@@ -101,6 +102,13 @@ class _AppState extends State<App> with TickerProviderStateMixin{
         colorScheme: ColorScheme.fromSeed(seedColor: primaryColor()),
         useMaterial3: true,
       ),
+      localizationsDelegates: [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ],
+      supportedLocales: [
+        const Locale('fr'),
+      ],
       home:Container(
         // color: primaryColor(),
         color: Colors.white,
